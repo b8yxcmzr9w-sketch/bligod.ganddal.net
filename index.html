@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Opplæring – Ganddal</title>
+  <title>BliGod – Ganddal</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0f0f13;
-      --surface: #1a1a24;
-      --surface-hover: #22222f;
-      --border: #2e2e42;
-      --accent: #7c6ff7;
-      --accent-glow: rgba(124, 111, 247, 0.25);
-      --text: #e8e8f0;
-      --muted: #7878a0;
-      --card-1: #6fbff7;
-      --card-2: #f79e6f;
+      --bg: #111111;
+      --surface: #272727;
+      --surface-hover: #2f2f2f;
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #D4820A;
+      --accent-glow: rgba(212, 130, 10, 0.18);
+      --text: #FAF7F2;
+      --muted: #888888;
+      --card-1: #F5A623;
+      --card-2: #4ade80;
     }
 
     body {
@@ -49,7 +49,7 @@
       font-weight: 800;
       letter-spacing: -0.03em;
       line-height: 1.1;
-      background: linear-gradient(135deg, #c4bffe 0%, #7c6ff7 60%, #a78bfa 100%);
+      background: linear-gradient(135deg, #FAF7F2 0%, #F5A623 55%, #D4820A 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -94,16 +94,16 @@
       transition: opacity 0.2s;
     }
 
-    .card-1::before { background: radial-gradient(circle at 20% 20%, rgba(111, 191, 247, 0.08), transparent 70%); }
-    .card-2::before { background: radial-gradient(circle at 20% 20%, rgba(247, 158, 111, 0.08), transparent 70%); }
+    .card-1::before { background: radial-gradient(circle at 20% 20%, rgba(245, 166, 35, 0.08), transparent 70%); }
+    .card-2::before { background: radial-gradient(circle at 20% 20%, rgba(74, 222, 128, 0.08), transparent 70%); }
 
     .card:hover {
       background: var(--surface-hover);
       transform: translateY(-4px);
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
     }
-    .card-1:hover { border-color: var(--card-1); box-shadow: 0 16px 40px rgba(111, 191, 247, 0.15); }
-    .card-2:hover { border-color: var(--card-2); box-shadow: 0 16px 40px rgba(247, 158, 111, 0.15); }
+    .card-1:hover { border-color: var(--card-1); box-shadow: 0 16px 40px rgba(245, 166, 35, 0.15); }
+    .card-2:hover { border-color: var(--card-2); box-shadow: 0 16px 40px rgba(74, 222, 128, 0.15); }
     .card:hover::before { opacity: 1; }
 
     .card:active { transform: translateY(-2px); }
@@ -162,7 +162,7 @@
       margin-top: auto;
       padding-top: 3rem;
       font-size: 0.72rem;
-      color: #3a3a55;
+      color: #444444;
       letter-spacing: 0.04em;
     }
   </style>
@@ -170,7 +170,7 @@
 <body>
 
   <header>
-    <p class="site-label">opplæring.ganddal.net</p>
+    <p class="site-label">BliGod.ganddal.net</p>
     <h1>Velg en øvelse</h1>
     <p class="subtitle">Trening som faktisk hjelper.</p>
   </header>
@@ -185,7 +185,7 @@
       <span class="card-arrow">Start øvelsen →</span>
     </a>
 
-    <a class="card card-2" href="Lesetrening/lesetrening-v2.html" target="_blank" rel="noopener">
+    <a class="card card-2" href="Lesetrening/index.html" target="_blank" rel="noopener">
       <span class="icon">📖</span>
       <span class="card-badge">Lesing</span>
       <p class="card-title">Lesetrening</p>
