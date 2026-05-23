@@ -487,6 +487,7 @@ function App() {
 
   if (modus === "velg") return (
     <div style={s.container}>
+      <a href="https://bligod.ganddal.net" style={{display:"inline-flex", alignItems:"center", gap:6, fontSize:13, color:"#888", textDecoration:"none", marginBottom:"1.25rem"}}>← Tilbake</a>
       <h2 style={s.h2}>Lesetrening</h2>
       <p style={{fontSize:14, color:"#666", marginBottom:"1.5rem"}}>Lim inn ord eller en setning du vil øve på.</p>
       <textarea value={inputTekst} onChange={e => setInputTekst(e.target.value)} rows={6} placeholder={"bil\nbuss\ntog\nsykkel"} style={s.textarea} />
