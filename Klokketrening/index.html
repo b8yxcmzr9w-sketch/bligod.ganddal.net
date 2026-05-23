@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lær klokka</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <span class="copyright">© Geddi</span>
+
+  <!-- ── Innstillinger ── -->
+  <div id="settings-screen" class="screen active">
+    <h1>🕐 Lær klokka</h1>
+
+    <div class="card">
+      <h2>Velg modus</h2>
+      <div class="mode-cards">
+        <button class="mode-card active" data-mode="show-clock">
+          <span class="mode-icon">🕐 → 📝</span>
+          <strong>Gjett uttrykket</strong>
+          <small>Klokka vises – velg riktig tid fra alternativer</small>
+        </button>
+        <button class="mode-card" data-mode="show-expression">
+          <span class="mode-icon">📝 → 🕐</span>
+          <strong>Still klokka</strong>
+          <small>Klokkeslettet vises – dra minuttviserviseren til riktig posisjon</small>
+        </button>
+        <button class="mode-card" data-mode="both">
+          <span class="mode-icon">🔀</span>
+          <strong>Begge, vekslende</strong>
+          <small>Oppgavene varierer mellom begge typer</small>
+        </button>
+      </div>
+    </div>
+
+    <div class="card collapsible collapsed" id="clock-settings-card">
+      <button class="card-toggle" aria-expanded="false" aria-controls="clock-settings-body">
+        <h2>Klokkevisning</h2>
+        <span class="toggle-arrow">▲</span>
+      </button>
+      <div class="card-body" id="clock-settings-body">
+
+      <div class="setting-row">
+        <label>Uttrykksstil</label>
+        <div class="radio-group">
+          <label><input type="radio" name="style" value="text" checked> Norsk tekst</label>
+          <label><input type="radio" name="style" value="digital"> Digital (3:15)</label>
+        </div>
+      </div>
+
+      <div class="setting-row face-picker-row">
+        <label>Markeringer</label>
+        <div id="marks-picker" class="face-picker"></div>
+      </div>
+
+      <div class="setting-row face-picker-row">
+        <label>Tall</label>
+        <div id="nums-picker" class="face-picker"></div>
+      </div>
+
+      <div class="setting-row">
+        <label>Vis hint («Du viser nå: …»)</label>
+        <label class="toggle">
+          <input type="checkbox" id="show-hint">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-row">
+        <label>Timeviser</label>
+        <input type="color" id="hour-color" value="#1a1a2e">
+      </div>
+
+      <div class="setting-row">
+        <label>Minuttsviser</label>
+        <input type="color" id="minute-color" value="#e63946">
+      </div>
+
+      </div><!-- /card-body -->
+    </div><!-- /card.collapsible -->
+
+    <button id="start-btn" class="btn-primary">Start!</button>
+
+    <!-- ── Øktlogg ── -->
+    <div id="log-section">
+      <h2 class="log-heading">Tidligere øvelser</h2>
+      <div id="log-list"></div>
+    </div>
+
+  </div>
+
+
+  <!-- ── Spill ── -->
+  <div id="game-screen" class="screen">
+    <div class="game-header">
+      <button id="back-btn" class="btn-icon">←</button>
+      <div class="score-info">
+        <span id="score">0</span> riktige
+        <span id="streak-display"></span>
+      </div>
+      <div class="header-right">
+        <span id="task-timer" class="task-timer">–</span>
+        <button id="sound-btn" class="btn-icon" title="Lyd av/på">🔊</button>
+        <span id="task-counter">1 / 10</span>
+      </div>
+    </div>
+
+    <div id="task-area"></div>
+
+    <div id="feedback" class="feedback hidden"></div>
+    <button id="next-btn" class="btn-primary hidden">Neste →</button>
+  </div>
+
+
+  <!-- ── Resultat ── -->
+  <div id="result-screen" class="screen">
+    <h2>Ferdig!</h2>
+    <div class="result-stats">
+      <div class="stat"><span id="final-score">0</span><label>Riktige</label></div>
+      <div class="stat"><span id="final-total">10</span><label>Totalt</label></div>
+      <div class="stat"><span id="final-streak">0</span><label>Beste rekke</label></div>
+      <div class="stat"><span id="final-avg-time">–</span><label>Snitt/spm</label></div>
+    </div>
+    <div id="result-progress"></div>
+    <p id="result-message"></p>
+    <button id="play-again-btn" class="btn-primary">Spill igjen</button>
+    <button id="settings-btn" class="btn-secondary">Innstillinger</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesetrening v2</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f0; color: #1a1a1a; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; }
+  #root { width: 100%; max-width: 600px; padding: 2rem 1rem; }
+  textarea { font-family: inherit; }
+  input[type=range] { width: 100%; accent-color: #555; }
+  button { font-family: inherit; transition: background 0.15s, opacity 0.15s; }
+  button:hover:not(:disabled) { background: #e8e8e4 !important; }
+  button:active:not(:disabled) { transform: scale(0.98); }
+  @keyframes bokstavLys {
+    0%   { color: #1a1a1a; transform: scale(1); }
+    50%  { color: #e67e00; transform: scale(1.15); }
+    100% { color: #1a1a1a; transform: scale(1); }
+  }
+  .bokstav { display: inline-block; transition: color 0.1s; }
+  .bokstav.aktiv { animation: bokstavLys 0.2s ease-in-out forwards; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+const MS_PER_BOKSTAV = 80;
+
+function lagLignende(ord) {
+  const pool = [];
+  const bokstaver = "abcdefghijklmnoprstuvæøå";
+  for (let i = 0; i < 20; i++) {
+    let kandidat = ord;
+    const type = Math.floor(Math.random() * 3);
+    if (type === 0 && ord.length > 1) {
+      const pos = Math.floor(Math.random() * ord.length);
+      kandidat = ord.slice(0, pos) + bokstaver[Math.floor(Math.random()*bokstaver.length)] + ord.slice(pos+1);
+    } else if (type === 1 && ord.length > 2) {
+      const pos = Math.floor(Math.random() * (ord.length - 1));
+      kandidat = ord.slice(0, pos) + ord[pos+1] + ord[pos] + ord.slice(pos+2);
+    } else {
+      kandidat = ord + bokstaver[Math.floor(Math.random()*bokstaver.length)];
+    }
+    if (kandidat !== ord && kandidat.length > 1 && !pool.includes(kandidat)) pool.push(kandidat);
+    if (pool.length >= 3) break;
+  }
+  while (pool.length < 3) pool.push(ord + "x" + pool.length);
+  return pool.slice(0, 3);
+}
+
+function surLyd(ctx) {
+  if (!ctx) return;
+  const osc = ctx.createOscillator(), gain = ctx.createGain();
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.type = "sawtooth";
+  osc.frequency.setValueAtTime(180, ctx.currentTime);
+  osc.frequency.linearRampToValueAtTime(80, ctx.currentTime + 0.4);
+  gain.gain.setValueAtTime(0.3, ctx.currentTime);
+  gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.5);
+  osc.start(); osc.stop(ctx.currentTime + 0.5);
+}
+
+function morsoLyd(ctx) {
+  if (!ctx) return;
+  [0, 0.15, 0.3].forEach((t, i) => {
+    const osc = ctx.createOscillator(), gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.value = [523, 659, 784][i];
+    gain.gain.setValueAtTime(0.2, ctx.currentTime + t);
+    gain.gain.linearRampToValueAtTime(0, ctx.currentTime + t + 0.12);
+    osc.start(ctx.currentTime + t); osc.stop(ctx.currentTime + t + 0.15);
+  });
+}
+
+function fanfare(ctx) {
+  if (!ctx) return;
+  const type = Math.floor(Math.random() * 5);
+  const now = ctx.currentTime;
+  function tone(freq, start, dur, vol=0.25, shape="sine") {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = shape; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, now+start);
+    g.gain.linearRampToValueAtTime(0, now+start+dur);
+    o.start(now+start); o.stop(now+start+dur+0.05);
+  }
+  function vibrato(freq, start, dur, rate=6, depth=8, vol=0.2) {
+    const o = ctx.createOscillator(), lfo = ctx.createOscillator(), lfoGain = ctx.createGain(), g = ctx.createGain();
+    lfo.frequency.value = rate; lfoGain.gain.value = depth;
+    lfo.connect(lfoGain); lfoGain.connect(o.frequency);
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, now+start);
+    g.gain.linearRampToValueAtTime(0, now+start+dur);
+    lfo.start(now+start); o.start(now+start);
+    lfo.stop(now+start+dur+0.05); o.stop(now+start+dur+0.05);
+  }
+  if (type === 0) {
+    [[392,0],[523,0.18],[659,0.36],[784,0.54],[784,0.72],[784,0.9]].forEach(([f,t]) => tone(f,t,0.18,0.3,"square"));
+  } else if (type === 1) {
+    vibrato(600,0,0.3,5,60,0.25); vibrato(500,0.35,0.4,5,80,0.25); vibrato(650,0.8,0.5,6,70,0.2);
+  } else if (type === 2) {
+    [[400,0,0.1],[600,0.1,0.1],[300,0.2,0.15],[700,0.35,0.2],[500,0.55,0.3]].forEach(([f,t,d]) => tone(f,t,d,0.28,"sawtooth"));
+  } else if (type === 3) {
+    [0,0.35,0.65].forEach(start => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination); o.type = "sawtooth";
+      o.frequency.setValueAtTime(280, now+start);
+      o.frequency.linearRampToValueAtTime(180, now+start+0.12);
+      g.gain.setValueAtTime(0.3, now+start);
+      g.gain.linearRampToValueAtTime(0, now+start+0.2);
+      o.start(now+start); o.stop(now+start+0.25);
+    });
+  } else {
+    [[262,0,0.1],[330,0.1,0.1],[392,0.2,0.1],[523,0.3,0.15],[659,0.45,0.15],[784,0.6,0.4]].forEach(([f,t,d]) => tone(f,t,d,0.25,"triangle"));
+  }
+}
+
+function formatTid(ms) {
+  const s = Math.round(ms / 1000);
+  if (s < 60) return `${s} sek`;
+  return `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;
+}
+
+function sammenlignTekst(nå, forrige) {
+  if (forrige == null) return null;
+  const diff = Math.round((forrige - nå) / 1000);
+  if (Math.abs(diff) <= 2) return { tekst: "Samme tid som sist", farge: "#888" };
+  if (diff > 0) return { tekst: `${diff} sek raskere enn sist!`, farge: "#2a7a2a" };
+  return { tekst: `${Math.abs(diff)} sek tregere enn sist`, farge: "#a05000" };
+}
+
+function beregnScore(tid_ms, antOrd, prosent) {
+  if (!antOrd || !tid_ms) return 0;
+  const sekPerOrd = tid_ms / (antOrd * 1000);
+  return Math.round((prosent / 100) * Math.min(3 / sekPerOrd, 3) * 100);
+}
+function innstBadge(innst) {
+  if (!innst) return null;
+  return `${innst.antallAlternativ}✓ · ${innst.tidsBegrensning}s`;
+}
+
+const IKONER = ["🦊","🐻","🦁","🐯","🦋","🌊","🌈","🍎","🚀","⭐","🎯","🌸","🦀","🌙","🎪","🏔️","🎸","🌺","🦜","🐬","🎨","🏄","🌿","🍀","🎭"];
+function hashOrdliste(liste) {
+  const str = [...liste].sort().join(",");
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (Math.imul(31, h) + str.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+function ikonForOrdliste(liste) {
+  if (!liste || !liste.length) return "📝";
+  return IKONER[hashOrdliste(liste) % IKONER.length];
+}
+
+function getInnst(key, def) {
+  try { const v = JSON.parse(localStorage.getItem("lesetrening_innstillinger") || "{}")[key]; return v !== undefined ? v : def; }
+  catch { return def; }
+}
+
+// Animerer bokstavene én etter én, 80ms per bokstav
+function AnimertOrd({ ord, aktiv }) {
+  const [aktivBokstav, setAktivBokstav] = useState(-1);
+  const timersRef = useRef([]);
+
+  useEffect(() => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+    setAktivBokstav(-1);
+    if (!aktiv || !ord) return;
+    ord.split("").forEach((_, i) => {
+      const t = setTimeout(() => setAktivBokstav(i), i * MS_PER_BOKSTAV);
+      timersRef.current.push(t);
+    });
+    const slutt = setTimeout(() => setAktivBokstav(-1), ord.length * MS_PER_BOKSTAV + 200);
+    timersRef.current.push(slutt);
+    return () => timersRef.current.forEach(clearTimeout);
+  }, [aktiv, ord]);
+
+  return (
+    <div style={{fontSize:86, fontWeight:500, letterSpacing:4, lineHeight:1.1}}>
+      {(ord||"").split("").map((b, i) => (
+        <span key={i} className={`bokstav${aktivBokstav === i ? " aktiv" : ""}`}>{b}</span>
+      ))}
+    </div>
+  );
+}
+
+const s = {
+  container: { padding:"2rem 1.5rem", maxWidth:520, margin:"0 auto" },
+  h2: { fontSize:22, fontWeight:500, marginBottom:"0.5rem", color:"#1a1a1a" },
+  label: { fontSize:14, color:"#666", whiteSpace:"nowrap" },
+  textarea: { width:"100%", fontSize:16, padding:"10px 12px", borderRadius:8, border:"1px solid #ccc", background:"#fff", color:"#1a1a1a", resize:"vertical" },
+  btn: (muted, stor) => ({ fontSize: stor?18:15, padding: stor?"12px 32px":"9px 22px", borderRadius:8, cursor:"pointer", background:"#fff", border:"1px solid #bbb", color: muted?"#888":"#1a1a1a" }),
+  card: { background:"#eeeee8", borderRadius:8, padding:"14px 20px", minWidth:64, textAlign:"center" },
+  cardLabel: { fontSize:13, color:"#666", marginBottom:4 },
+  cardVal: { fontSize:24, fontWeight:500, color:"#1a1a1a" },
+  valgBtn: { fontSize:30, padding:"18px 12px", borderRadius:12, cursor:"pointer", background:"#eeeee8", border:"1px solid #ccc", color:"#1a1a1a", fontWeight:500, width:"100%" }
+};
+
+function Btn({ label, onClick, muted, stor, disabled }) {
+  return <button onClick={onClick} disabled={disabled} style={{...s.btn(muted,stor), opacity:disabled?0.5:1, cursor:disabled?"not-allowed":"pointer"}}>{label}</button>;
+}
+
+function App() {
+  const [modus, setModus] = useState("velg");
+  const [inputTekst, setInputTekst] = useState("");
+  const [visTid, setVisTid] = useState(() => getInnst("visTid", 5));
+  const visTidRef = useRef(getInnst("visTid", 5));
+  const [lesehjelp, setLesehjelp] = useState(() => getInnst("lesehjelp", false));
+  const [forsinkelse, setForsinkelse] = useState(() => getInnst("forsinkelse", 1));
+  const [antallAlternativ, setAntallAlternativ] = useState(() => getInnst("antallAlternativ", 4));
+  const [tidsBegrensning, setTidsBegrensning] = useState(() => getInnst("tidsBegrensning", 5));
+  const [gjenværendeTid, setGjenværendeTid] = useState(0);
+
+  const [fase, setFase] = useState("innstilling");
+  const [ord, setOrd] = useState([]);
+  const [indeks, setIndeks] = useState(0);
+  const [visOrd, setVisOrd] = useState(false);
+  const [animerOrd, setAnimerOrd] = useState(false);
+  const [displayIndeks, setDisplayIndeks] = useState(0);
+  const [valg, setValg] = useState([]);
+  const [riktige, setRiktige] = useState(0);
+  const [feil, setFeil] = useState(0);
+  const riktigeRef = useRef(0);
+  const feilRef = useRef(0);
+  const [historikk, setHistorikk] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("lesetrening_historikk") || "[]"); }
+    catch { return []; }
+  });
+  const [forsøk, setForsøk] = useState(0);
+  const [melding, setMelding] = useState("");
+  const [ventPå, setVentPå] = useState(false);
+
+  const [leseOrd, setLeseOrd] = useState([]);
+  const [leseIndeks, setLeseIndeks] = useState(0);
+  const [leseVis, setLeseVis] = useState(false);
+  const [leseAnimer, setLeseAnimer] = useState(false);
+  const [leseFase, setLeseFase] = useState("venter");
+
+  const audioCtx = useRef(null);
+  const timerRef = useRef(null);
+  const speechTimerRef = useRef(null);
+  const sesjonRef = useRef(0);
+  const startTidRef = useRef(null);
+  const [øktTid, setØktTid] = useState(null);
+  const [forrigeTidOrd, setForrigeTidOrd] = useState(() => {
+    const v = localStorage.getItem("lesetrening_forrigeTid_ord");
+    return v ? parseInt(v) : null;
+  });
+  const [forrigeTidLesing, setForrigeTidLesing] = useState(() => {
+    const v = localStorage.getItem("lesetrening_forrigeTid_lesing");
+    return v ? parseInt(v) : null;
+  });
+
+  function getCtx() {
+    if (!audioCtx.current) audioCtx.current = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.current.state === "suspended") audioCtx.current.resume();
+    return audioCtx.current;
+  }
+
+  useEffect(() => {
+    function unlock() {
+      if (!audioCtx.current) audioCtx.current = new (window.AudioContext || window.webkitAudioContext)();
+      audioCtx.current.resume();
+    }
+    window.addEventListener("pointerdown", unlock, { once: true });
+    return () => window.removeEventListener("pointerdown", unlock);
+  }, []);
+
+  useEffect(() => {
+    setØktTid(null);
+    setForrigeTidOrd(null);
+    localStorage.removeItem("lesetrening_forrigeTid_ord");
+  }, [inputTekst]);
+
+  useEffect(() => {
+    localStorage.setItem("lesetrening_innstillinger", JSON.stringify({ visTid, lesehjelp, forsinkelse, antallAlternativ, tidsBegrensning }));
+  }, [visTid, lesehjelp, forsinkelse, antallAlternativ, tidsBegrensning]);
+
+  function parseOrd(tekst) {
+    return tekst.split(/[\s,]+/).map(s => s.replace(/[^a-zA-ZæøåÆØÅ]/g,"")).filter(Boolean);
+  }
+
+  function beregnTid(ordet) {
+    const v = visTidRef.current;
+    const sekPerBokstav = 0.08 * Math.pow(15, (v - 1) / 9);
+    return Math.max(0.15, (ordet || "").length * sekPerBokstav);
+  }
+
+  // Les opp ord med bokstavanimasjon synkronisert til 80ms/bokstav
+  function lesOppMedAnimasjon(ordet, setAnimer, callback) {
+    setAnimer(true);
+    if (!lesehjelp) { if (callback) callback(); return; }
+    const taletid = ordet.length * MS_PER_BOKSTAV;
+    const kjør = () => {
+      const u = new SpeechSynthesisUtterance(ordet);
+      u.lang = "nb-NO";
+      let ferdig = false;
+      const avslutt = () => {
+        if (ferdig) return;
+        ferdig = true;
+        if (callback) callback();
+      };
+      u.onend = avslutt;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
+      setTimeout(avslutt, taletid + 600);
+    };
+    if (forsinkelse === 0) { kjør(); } else { speechTimerRef.current = setTimeout(kjør, forsinkelse * 1000); }
+  }
+
+  // Viser ordet, venter på opplesing, så viser i visTid sekunder, så gjett
+  function visOgVent(ordet, visTidSek, etter) {
+    const sesjon = sesjonRef.current;
+    lesOppMedAnimasjon(ordet, () => {}, () => {
+      if (sesjonRef.current !== sesjon) return;
+      setTimeout(() => {
+        if (sesjonRef.current !== sesjon) return;
+        etter();
+      }, visTidSek * 1000);
+    });
+  }
+
+  function startOrd() {
+    const liste = parseOrd(inputTekst);
+    if (!liste.length) return;
+    const shuffled = [...liste].sort(() => Math.random() - 0.5);
+    setOrd(shuffled); setIndeks(0); setRiktige(0); setFeil(0);
+    riktigeRef.current = 0; feilRef.current = 0;
+    setForsøk(0); setMelding(""); setFase("klar"); setVisOrd(false); setAnimerOrd(false);
+    setModus("ord");
+  }
+
+  function startLesing() {
+    const liste = parseOrd(inputTekst);
+    if (!liste.length) return;
+    setLeseOrd(liste); setLeseIndeks(0); setLeseVis(false); setLeseAnimer(false); setLeseFase("klar");
+    setModus("lesing");
+  }
+
+  function startOrdNå() {
+    sesjonRef.current++;
+    startTidRef.current = Date.now();
+    setØktTid(null);
+    setFase("visOrd");
+  }
+
+  function startLesingNå() {
+    startTidRef.current = Date.now();
+    setØktTid(null);
+    const tid = beregnTid(leseOrd[0]);
+    setLeseFase("blank");
+    setTimeout(() => {
+      setLeseVis(true); setLeseAnimer(true);
+      visOgVent(leseOrd[0], tid, () => { setLeseVis(false); setLeseFase("vist"); });
+    }, 2000);
+  }
+
+  function lagreØkt(elapsed, antOrd, r, f, ordliste) {
+    const pct = (r + f) > 0 ? Math.round((r / (r + f)) * 100) : 0;
+    const entry = {
+      dato: new Date().toLocaleDateString("nb-NO", {day:"numeric", month:"short"}),
+      tid: elapsed, ord: antOrd, riktige: r, feil: f, prosent: pct,
+      score: beregnScore(elapsed, antOrd, pct),
+      ordliste: [...ordliste].sort(),
+      innstillinger: { visTid, antallAlternativ, tidsBegrensning, lesehjelp, forsinkelse }
+    };
+    const ny = [entry, ...JSON.parse(localStorage.getItem("lesetrening_historikk") || "[]")].slice(0, 20);
+    setHistorikk(ny);
+    localStorage.setItem("lesetrening_historikk", JSON.stringify(ny));
+  }
+
+  function avsluttOrd() {
+    sesjonRef.current++;
+    clearTimeout(speechTimerRef.current);
+    window.speechSynthesis.cancel();
+    const elapsed = Date.now() - startTidRef.current;
+    setØktTid(elapsed);
+    localStorage.setItem("lesetrening_forrigeTid_ord", elapsed);
+    lagreØkt(elapsed, ord.length, riktigeRef.current, feilRef.current, ord);
+    const ctx = getCtx();
+    ctx.resume().then(() => setTimeout(() => fanfare(ctx), 400));
+    setFase("ferdig");
+  }
+
+  function avsluttLesing() {
+    const elapsed = Date.now() - startTidRef.current;
+    setØktTid(elapsed);
+    localStorage.setItem("lesetrening_forrigeTid_lesing", elapsed);
+    fanfare(getCtx());
+    setLeseFase("ferdig");
+  }
+
+  // Ord-modus visning
+  useEffect(() => {
+    if (fase !== "visOrd") return;
+    clearTimeout(timerRef.current);
+    setVisOrd(false); setAnimerOrd(false);
+    const tid = beregnTid(ord[indeks] || "");
+    timerRef.current = setTimeout(() => {
+      setVisOrd(true); setAnimerOrd(true); setDisplayIndeks(indeks);
+      visOgVent(ord[indeks] || "", tid, () => {
+        setVisOrd(false); setAnimerOrd(false);
+        timerRef.current = setTimeout(() => {
+          const riktig = ord[indeks];
+          const like = lagLignende(riktig).slice(0, antallAlternativ - 1);
+          const alle = [...like, riktig].sort(() => Math.random() - 0.5);
+          setValg(alle); setForsøk(0); setMelding(""); setFase("gjett");
+        }, 1000);
+      });
+    }, 2000);
+    return () => clearTimeout(timerRef.current);
+  }, [fase, indeks, visTid]);
+
+  useEffect(() => {
+    if (fase !== "gjett") return;
+    setGjenværendeTid(tidsBegrensning);
+    let remaining = tidsBegrensning;
+    const id = setInterval(() => {
+      remaining -= 1;
+      setGjenværendeTid(remaining);
+      if (remaining <= 0) {
+        clearInterval(id);
+        feilRef.current += 1;
+        setFeil(feilRef.current);
+        surLyd(getCtx());
+        const neste = indeks + 1;
+        if (neste >= ord.length) avsluttOrd();
+        else { setIndeks(neste); setFase("visOrd"); }
+      }
+    }, 1000);
+    return () => clearInterval(id);
+  }, [fase, indeks, tidsBegrensning]);
+
+  function lesOppValgt(tekst, callback) {
+    const u = new SpeechSynthesisUtterance(tekst);
+    u.lang = "nb-NO";
+    if (callback) u.onend = () => setTimeout(callback, 500);
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+  }
+
+  function velg(valgt) {
+    const riktig = ord[indeks];
+    const neste = indeks+1;
+    if (valgt === riktig) {
+      riktigeRef.current += 1;
+      setRiktige(riktigeRef.current);
+      morsoLyd(getCtx());
+    } else {
+      feilRef.current += 1;
+      setFeil(feilRef.current);
+      surLyd(getCtx());
+    }
+    if (neste >= ord.length) avsluttOrd();
+    else { setIndeks(neste); setFase("visOrd"); }
+  }
+
+  function avbryt() { sesjonRef.current++; clearTimeout(timerRef.current); clearTimeout(speechTimerRef.current); window.speechSynthesis.cancel(); setFase("innstilling"); setModus("velg"); }
+
+  const totaltForsøk = riktige + feil;
+  const prosent = totaltForsøk > 0 ? Math.round((riktige / totaltForsøk) * 100) : 0;
+
+  function visLeseOrd(ordet) {
+    const tid = beregnTid(ordet);
+    setLeseFase("blank"); setLeseVis(false); setLeseAnimer(false);
+    setTimeout(() => {
+      setLeseVis(true); setLeseAnimer(true);
+      visOgVent(ordet, tid, () => { setLeseVis(false); setLeseFase("vist"); });
+    }, 2000);
+  }
+
+  function leseNeste() {
+    const neste = leseIndeks+1;
+    if (neste >= leseOrd.length) { avsluttLesing(); return; }
+    setLeseIndeks(neste);
+    visLeseOrd(leseOrd[neste]);
+  }
+
+  // ── RENDER ──
+
+  if (modus === "velg") return (
+    <div style={s.container}>
+      <h2 style={s.h2}>Lesetrening</h2>
+      <p style={{fontSize:14, color:"#666", marginBottom:"1.5rem"}}>Lim inn ord eller en setning du vil øve på.</p>
+      <textarea value={inputTekst} onChange={e => setInputTekst(e.target.value)} rows={6} placeholder={"bil\nbuss\ntog\nsykkel"} style={s.textarea} />
+
+      <div style={{display:"flex", alignItems:"center", gap:16, margin:"1.25rem 0 0.75rem"}}>
+        <label style={s.label}>Hastighet</label>
+        <input type="range" min="1" max="10" step="0.5" value={visTid} onChange={e => { const v = parseFloat(e.target.value); setVisTid(v); visTidRef.current = v; }} />
+        <span style={{fontSize:14, fontWeight:500, minWidth:42, color:"#1a1a1a"}}>{visTid} / 10</span>
+      </div>
+
+      <div style={{display:"flex", alignItems:"center", gap:16, margin:"0.75rem 0"}}>
+        <label style={s.label}>Svaralternativ</label>
+        <div style={{display:"flex", gap:8}}>
+          {[2,3,4].map(n => (
+            <button key={n} onClick={() => setAntallAlternativ(n)} style={{fontSize:15, padding:"7px 18px", borderRadius:8, cursor:"pointer", border:"1px solid #bbb", background:antallAlternativ===n?"#1a1a1a":"#fff", color:antallAlternativ===n?"#fff":"#1a1a1a", fontFamily:"inherit", fontWeight:antallAlternativ===n?500:400}}>{n}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{display:"flex", alignItems:"center", gap:16, margin:"0.75rem 0 0.75rem"}}>
+        <label style={s.label}>Svartid</label>
+        <input type="range" min="1" max="10" step="1" value={tidsBegrensning} onChange={e => setTidsBegrensning(parseInt(e.target.value))} />
+        <span style={{fontSize:14, fontWeight:500, minWidth:42, color:"#1a1a1a"}}>{tidsBegrensning} sek</span>
+      </div>
+
+      <div style={{display:"flex", alignItems:"center", gap:12, margin:"0.75rem 0", padding:"0.75rem 1rem", background:"#eeeee8", borderRadius:8}}>
+        <input type="checkbox" id="lesehjelp" checked={lesehjelp} onChange={e => setLesehjelp(e.target.checked)} style={{width:18, height:18, cursor:"pointer"}} />
+        <label htmlFor="lesehjelp" style={{fontSize:15, color:"#1a1a1a", cursor:"pointer"}}>Lesehjelp – les opp ordet med bokstavanimasjon</label>
+      </div>
+
+      {lesehjelp && (
+        <div style={{display:"flex", alignItems:"center", gap:16, margin:"0.5rem 0 1rem", paddingLeft:"0.5rem"}}>
+          <label style={s.label}>Forsinkelse</label>
+          <input type="range" min="0" max="4" step="0.5" value={forsinkelse} onChange={e => setForsinkelse(parseFloat(e.target.value))} />
+          <span style={{fontSize:14, fontWeight:500, minWidth:42, color:"#1a1a1a"}}>{forsinkelse} s</span>
+        </div>
+      )}
+
+      <div style={{display:"flex", gap:12, flexWrap:"wrap", marginTop:"0.75rem"}}>
+        <Btn label="Start" onClick={startOrd} stor />
+      </div>
+
+      {historikk.length > 0 && (
+        <div style={{marginTop:"2rem"}}>
+          <div style={{fontSize:13, color:"#888", marginBottom:"0.6rem", fontWeight:500}}>Tidligere økter</div>
+          {(() => {
+            const entries = historikk.slice(0, 8);
+            return entries.map((h, i) => {
+              const ikon = ikonForOrdliste(h.ordliste);
+              const forrige = entries.slice(i + 1).find(e => ikonForOrdliste(e.ordliste) === ikon);
+              const delta = forrige != null && h.score != null && forrige.score != null ? h.score - forrige.score : null;
+              const badge = innstBadge(h.innstillinger);
+              return (
+                <div key={i} style={{background:i===0?"#e4e4de":"#eeeee8", borderRadius:6, marginBottom:5}}>
+                  <div style={{display:"flex", alignItems:"center", padding:"7px 12px", fontSize:13, color:"#555", gap:8}}>
+                    <span style={{fontSize:18, lineHeight:1, flexShrink:0}}>{ikon}</span>
+                    {badge && <span style={{fontSize:11, background:"#d0d0ca", borderRadius:4, padding:"2px 6px", color:"#555", flexShrink:0, whiteSpace:"nowrap"}}>{badge}</span>}
+                    <span style={{color:"#888", flexShrink:0}}>{h.dato}</span>
+                    <span style={{flex:1}} />
+                    {h.score != null
+                      ? <span style={{fontWeight:500, color:"#1a1a1a", flexShrink:0}}>
+                          {h.score}p{delta !== null && <span style={{marginLeft:4, fontSize:11, color:delta>0?"#2a7a2a":delta<0?"#c0392b":"#888"}}>{delta>0?`▲+${delta}`:delta<0?`▼${Math.abs(delta)}`:"="}</span>}
+                        </span>
+                      : <span style={{color:"#888", flexShrink:0}}>{h.prosent}%</span>
+                    }
+                    {i < 3 && h.ordliste && (
+                      <button onClick={() => {
+                        setInputTekst(h.ordliste.join("\n"));
+                        if (h.innstillinger) {
+                          const s = h.innstillinger;
+                          if (s.visTid !== undefined) { setVisTid(s.visTid); visTidRef.current = s.visTid; }
+                          if (s.antallAlternativ !== undefined) setAntallAlternativ(s.antallAlternativ);
+                          if (s.tidsBegrensning !== undefined) setTidsBegrensning(s.tidsBegrensning);
+                          if (s.lesehjelp !== undefined) setLesehjelp(s.lesehjelp);
+                          if (s.forsinkelse !== undefined) setForsinkelse(s.forsinkelse);
+                        }
+                      }} style={{fontSize:11, padding:"3px 8px", borderRadius:5, border:"1px solid #bbb", background:"#fff", color:"#555", cursor:"pointer", fontFamily:"inherit", flexShrink:0}}>Last inn</button>
+                    )}
+                  </div>
+                </div>
+              );
+            });
+          })()}
+        </div>
+      )}
+    </div>
+  );
+
+  if (modus === "ord") {
+    if (fase === "klar") return (
+      <div style={{display:"flex", alignItems:"center", justifyContent:"center", minHeight:"80vh", cursor:"pointer"}} onClick={startOrdNå}>
+        <p style={{fontSize:20, color:"#bbb", userSelect:"none", letterSpacing:1}}>Trykk for å starte</p>
+      </div>
+    );
+
+    if (fase === "visOrd") return (
+      <div style={{...s.container, textAlign:"center"}}>
+        <p style={{fontSize:13, color:"#666", marginBottom:"2rem"}}>{displayIndeks+1} / {ord.length}</p>
+        <div style={{minHeight:120, display:"flex", alignItems:"center", justifyContent:"center"}}>
+          {visOrd && <AnimertOrd ord={ord[indeks]} aktiv={animerOrd} />}
+        </div>
+        <div style={{marginTop:"3rem"}}><Btn label="Avbryt" onClick={avbryt} muted /></div>
+      </div>
+    );
+
+    if (fase === "gjett") return (
+      <div style={{...s.container, textAlign:"center"}}>
+        <p style={{fontSize:13, color:"#666", marginBottom:"0.75rem"}}>{displayIndeks+1} / {ord.length}</p>
+        <div style={{marginBottom:"1.5rem"}}>
+          <div style={{height:6, background:"#e0e0d8", borderRadius:3, overflow:"hidden", marginBottom:"0.4rem"}}>
+            <div style={{height:"100%", background: gjenværendeTid <= 2 ? "#c0392b" : "#555", borderRadius:3, width:`${(gjenværendeTid/tidsBegrensning)*100}%`, transition:"width 0.9s linear"}} />
+          </div>
+          <span style={{fontSize:13, color: gjenværendeTid <= 2 ? "#c0392b" : "#888"}}>{gjenværendeTid} sek</span>
+        </div>
+        <p style={{fontSize:15, color:"#666", marginBottom:"1.25rem"}}>Hvilket ord ble vist?</p>
+        <div style={{display:"grid", gridTemplateColumns:antallAlternativ===3?"1fr 1fr 1fr":"1fr 1fr", gap:12, marginBottom:"1.5rem"}}>
+          {valg.map((v,i) => (
+            <button key={i} onClick={() => velg(v)} style={s.valgBtn}>{v}</button>
+          ))}
+        </div>
+        <div style={{display:"flex", justifyContent:"center", gap:32, marginTop:"1rem", fontSize:13, color:"#666"}}>
+          <span>Riktige: <b style={{color:"#1a1a1a"}}>{riktige}</b></span>
+          <span>Feil: <b style={{color:"#1a1a1a"}}>{feil}</b></span>
+        </div>
+        <div style={{marginTop:"1.5rem"}}><Btn label="Avbryt" onClick={avbryt} muted /></div>
+      </div>
+    );
+
+    if (fase === "ferdig") return (
+      <div style={{...s.container, textAlign:"center"}}>
+        <div style={{fontSize:64, marginBottom:"1rem"}}>{prosent>=80?"🌟":prosent>=50?"💪":"📚"}</div>
+        <h2 style={{fontSize:28, fontWeight:500, marginBottom:"0.5rem", color:"#1a1a1a"}}>{prosent>=80?"Kjempebra jobbet!":prosent>=50?"Bra innsats!":"Fortsett å øve!"}</h2>
+        <p style={{fontSize:15, color:"#666", marginBottom:"1rem"}}>Du er gjennom alle ordene.</p>
+        {øktTid != null && (() => {
+          const res = sammenlignTekst(øktTid, forrigeTidOrd);
+          return (
+            <div style={{marginBottom:"1.5rem"}}>
+              <div style={{fontSize:24, fontWeight:500, color:"#1a1a1a"}}>{formatTid(øktTid)}</div>
+              {res && <div style={{fontSize:14, color:res.farge, marginTop:4}}>{res.tekst}</div>}
+            </div>
+          );
+        })()}
+        <div style={{display:"flex", justifyContent:"center", gap:16, marginBottom:"2rem", flexWrap:"wrap"}}>
+          {[["Ord",ord.length],["Riktige",riktige],["Feil",feil],["Treff",prosent+"%"]].map(([label,val]) => (
+            <div key={label} style={s.card}><div style={s.cardLabel}>{label}</div><div style={s.cardVal}>{val}</div></div>
+          ))}
+        </div>
+        <div style={{display:"flex", gap:12, justifyContent:"center", flexWrap:"wrap"}}>
+          <Btn label="Prøv igjen" onClick={() => { setForrigeTidOrd(øktTid); const sh=[...ord].sort(()=>Math.random()-0.5); setOrd(sh); setIndeks(0); setRiktige(0); setFeil(0); riktigeRef.current = 0; feilRef.current = 0; setØktTid(null); setFase("klar"); }} />
+          <Btn label="Tilbake" onClick={() => { clearTimeout(timerRef.current); clearTimeout(speechTimerRef.current); window.speechSynthesis.cancel(); setModus("velg"); setFase("innstilling"); }} muted />
+        </div>
+      </div>
+    );
+  }
+
+  if (modus === "lesing") {
+    if (leseFase === "klar") return (
+      <div style={{display:"flex", alignItems:"center", justifyContent:"center", minHeight:"80vh", cursor:"pointer"}} onClick={startLesingNå}>
+        <p style={{fontSize:20, color:"#bbb", userSelect:"none", letterSpacing:1}}>Trykk for å starte</p>
+      </div>
+    );
+
+    if (leseFase === "ferdig") return (
+      <div style={{...s.container, textAlign:"center"}}>
+        <div style={{fontSize:64, marginBottom:"1rem"}}>🌟</div>
+        <h2 style={{fontSize:28, fontWeight:500, marginBottom:"0.5rem", color:"#1a1a1a"}}>Alle ord lest!</h2>
+        {øktTid != null && (() => {
+          const res = sammenlignTekst(øktTid, forrigeTidLesing);
+          return (
+            <div style={{marginBottom:"1rem"}}>
+              <div style={{fontSize:24, fontWeight:500, color:"#1a1a1a"}}>{formatTid(øktTid)}</div>
+              {res && <div style={{fontSize:14, color:res.farge, marginTop:4}}>{res.tekst}</div>}
+            </div>
+          );
+        })()}
+        <div style={{display:"flex", gap:12, justifyContent:"center", marginTop:"1.5rem", flexWrap:"wrap"}}>
+          <Btn label="Les igjen" onClick={() => { setForrigeTidLesing(øktTid); setLeseIndeks(0); setLeseVis(false); setLeseAnimer(false); setØktTid(null); setLeseFase("klar"); }} />
+          <Btn label="Tilbake" onClick={() => { window.speechSynthesis.cancel(); setModus("velg"); }} muted />
+        </div>
+      </div>
+    );
+
+    return (
+      <div style={{...s.container, textAlign:"center"}}>
+        <p style={{fontSize:13, color:"#666", marginBottom:"2rem"}}>{leseIndeks+1} / {leseOrd.length}</p>
+        <div style={{minHeight:120, display:"flex", alignItems:"center", justifyContent:"center"}}>
+          {leseVis && <AnimertOrd ord={leseOrd[leseIndeks]} aktiv={leseAnimer} />}
+        </div>
+        <div style={{display:"flex", gap:12, justifyContent:"center", marginTop:"3rem", flexWrap:"wrap"}}>
+          {leseFase==="vist" && <Btn label="Omigjen" onClick={() => visLeseOrd(leseOrd[leseIndeks])} />}
+          {leseFase==="vist" && <Btn label={leseIndeks+1 < leseOrd.length ? "Neste" : "Ferdig"} onClick={leseNeste} stor />}
+        </div>
+        <div style={{marginTop:"2rem"}}><Btn label="Avbryt" onClick={() => { window.speechSynthesis.cancel(); setModus("velg"); }} muted /></div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
+<p style="text-align:center; font-size:11px; color:#bbb; padding:2rem 0 1rem; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">© Geddi</p>
+</body>
+</html>

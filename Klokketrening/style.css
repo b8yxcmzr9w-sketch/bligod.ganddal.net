@@ -1,0 +1,383 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #eef2ff;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 1rem 2rem;
+}
+
+/* ── Copyright ── */
+.copyright {
+  position: fixed; top: 0.6rem; right: 0.8rem;
+  font-size: 0.72rem; color: #c4b5fd;
+  pointer-events: none; user-select: none;
+}
+
+/* ── Screens ── */
+.screen { display: none; width: 100%; max-width: 560px; }
+.screen.active { display: block; }
+
+h1 { text-align: center; font-size: 2rem; color: #1e1b4b; margin-bottom: 1.25rem; }
+h2 { font-size: 1rem; font-weight: 700; color: #4338ca; margin-bottom: 0.75rem; }
+
+/* ── Card ── */
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 0.875rem;
+  box-shadow: 0 2px 10px rgba(67,56,202,.08);
+}
+
+/* ── Mode cards ── */
+.mode-cards { display: flex; flex-direction: column; gap: 0.625rem; }
+
+.mode-card {
+  display: flex; flex-direction: column; align-items: flex-start;
+  gap: 0.15rem;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e0e7ff; border-radius: 10px;
+  background: white; cursor: pointer; text-align: left;
+  font-family: inherit; font-size: 1rem;
+  transition: border-color .15s, background .15s;
+}
+.mode-card .mode-icon { font-size: 1.25rem; margin-bottom: 0.1rem; }
+.mode-card strong { color: #1e1b4b; }
+.mode-card small { color: #6b7280; font-size: 0.85rem; }
+.mode-card.active { border-color: #4338ca; background: #eef2ff; }
+.mode-card:hover:not(.active) { border-color: #a5b4fc; }
+
+/* ── Settings rows ── */
+.setting-row {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+.setting-row:last-child { border-bottom: none; }
+.setting-row > label:first-child { font-weight: 600; color: #374151; }
+
+.radio-group { display: flex; gap: 0.875rem; flex-wrap: wrap; }
+.radio-group label {
+  display: flex; align-items: center; gap: 0.3rem;
+  font-size: 0.9rem; cursor: pointer; color: #374151;
+}
+
+input[type="color"] {
+  width: 40px; height: 28px; border: none; border-radius: 6px;
+  cursor: pointer; background: none; padding: 0;
+}
+
+/* ── Toggle ── */
+.toggle { position: relative; display: inline-block; width: 46px; height: 26px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute; inset: 0; background: #d1d5db;
+  border-radius: 26px; cursor: pointer; transition: background .2s;
+}
+.slider::before {
+  content: ''; position: absolute;
+  width: 20px; height: 20px; left: 3px; top: 3px;
+  background: white; border-radius: 50%; transition: transform .2s;
+}
+.toggle input:checked + .slider { background: #4338ca; }
+.toggle input:checked + .slider::before { transform: translateX(20px); }
+
+/* ── Buttons ── */
+.btn-primary {
+  display: block; width: 100%; padding: 0.9rem;
+  background: #4338ca; color: white; border: none; border-radius: 10px;
+  font-size: 1.05rem; font-weight: 700; cursor: pointer; margin-top: 0.875rem;
+  font-family: inherit; transition: background .15s;
+}
+.btn-primary:hover { background: #3730a3; }
+.btn-primary.hidden { display: none; }
+
+.btn-secondary {
+  display: block; width: 100%; padding: 0.8rem;
+  background: white; color: #4338ca;
+  border: 2px solid #4338ca; border-radius: 10px;
+  font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.625rem;
+  font-family: inherit; transition: background .15s;
+}
+.btn-secondary:hover { background: #eef2ff; }
+
+.btn-icon {
+  background: white; border: 2px solid #e0e7ff; border-radius: 8px;
+  width: 38px; height: 38px; font-size: 1.1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Game header ── */
+.game-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.625rem 0 1rem;
+}
+.score-info { font-weight: 700; color: #374151; }
+#streak-display { color: #f97316; margin-left: 0.4rem; }
+.header-right { display: flex; align-items: center; gap: 0.5rem; }
+#task-counter { color: #9ca3af; font-size: 0.9rem; }
+
+/* ── Clock ── */
+.clock-wrap {
+  display: flex; justify-content: center;
+  margin: 0.5rem 0 1rem;
+}
+#clock-svg { filter: drop-shadow(0 4px 16px rgba(0,0,0,.12)); }
+#clock-svg.interactive { cursor: crosshair; touch-action: none; }
+
+/* ── Choices ── */
+.choices {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem;
+}
+
+/* Rad per alternativ: [🔊] [knapp] */
+.choice-row { display: flex; align-items: stretch; gap: 0.375rem; }
+.choice-row .choice-btn { flex: 1; }
+
+/* Høyttalerknapp */
+.speak-btn {
+  background: #ede9fe; border: 2px solid #c4b5fd; border-radius: 8px;
+  font-size: 1rem; padding: 0 0.5rem; cursor: pointer; flex-shrink: 0;
+  transition: background .12s, border-color .12s;
+  line-height: 1;
+}
+.speak-btn:hover:not(:disabled) { background: #c4b5fd; border-color: #a78bfa; }
+.speak-btn:disabled { opacity: 0.4; cursor: default; }
+
+.choice-btn {
+  padding: 0.8rem 0.5rem;
+  background: white; border: 2px solid #e0e7ff; border-radius: 10px;
+  font-size: 0.95rem; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: border-color .12s, background .12s;
+  color: #1e1b4b;
+}
+.choice-btn:hover:not(:disabled) { border-color: #4338ca; background: #eef2ff; }
+.choice-btn.correct { border-color: #16a34a; background: #f0fdf4; color: #15803d; }
+.choice-btn.wrong   { border-color: #dc2626; background: #fef2f2; color: #b91c1c; }
+.choice-btn:disabled { cursor: default; }
+
+/* ── Expression task ── */
+.expr-card {
+  text-align: center;
+  background: white; border-radius: 14px; padding: 1.25rem 1rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 10px rgba(67,56,202,.08);
+}
+.expr-card.speakable {
+  cursor: pointer;
+  border: 2px solid #e0e7ff;
+  transition: background .15s, border-color .15s;
+  user-select: none;
+}
+.expr-card.speakable:hover { background: #f5f3ff; border-color: #c4b5fd; }
+.expr-card .expr-text {
+  font-size: 1.9rem; font-weight: 800; color: #1e1b4b;
+  line-height: 1.2;
+}
+.expr-card small { color: #6b7280; font-size: 0.85rem; display: block; margin-top: 0.4rem; }
+
+.current-hint {
+  text-align: center; font-size: 0.9rem; color: #6b7280;
+  margin-bottom: 0.5rem; min-height: 1.4em;
+}
+.current-hint strong { color: #4338ca; }
+
+.btn-confirm {
+  display: block; width: 100%; padding: 0.8rem;
+  background: #16a34a; color: white; border: none; border-radius: 10px;
+  font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 0.5rem;
+  font-family: inherit; transition: background .15s;
+}
+.btn-confirm:hover:not(:disabled) { background: #15803d; }
+.btn-confirm:disabled { background: #9ca3af; cursor: default; }
+
+/* ── Feedback ── */
+.feedback {
+  padding: 0.875rem 1.1rem; border-radius: 10px; margin-top: 0.75rem;
+  font-size: 0.95rem; font-weight: 600;
+}
+.feedback.correct { background: #f0fdf4; color: #15803d; border: 2px solid #86efac; }
+.feedback.wrong   { background: #fef2f2; color: #b91c1c; border: 2px solid #fca5a5; }
+.feedback.hidden  { display: none; }
+
+/* ── Result ── */
+#result-screen { text-align: center; padding-top: 2rem; }
+#result-screen h2 { font-size: 2.25rem; color: #1e1b4b; margin-bottom: 1.5rem; }
+
+.result-stats {
+  display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.25rem;
+}
+.stat { display: flex; flex-direction: column; align-items: center; }
+.stat span { font-size: 2.75rem; font-weight: 800; color: #4338ca; }
+.stat label { color: #6b7280; font-size: 0.85rem; margin-top: 0.1rem; }
+
+#result-message { font-size: 1.1rem; color: #374151; margin-bottom: 1.5rem; }
+
+/* ── Digital klokkeslett ── */
+.digital-display {
+  font-family: 'Courier New', 'Lucida Console', monospace;
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #1e1b4b;
+  background: #e0e7ff;
+  border-radius: 10px;
+  padding: 0.3rem 1rem;
+  display: inline-block;
+  margin-bottom: 0.4rem;
+}
+
+.choice-btn.digital {
+  font-family: 'Courier New', 'Lucida Console', monospace;
+  font-size: 1.2rem;
+  letter-spacing: 0.05em;
+}
+
+/* ── Sammenleggbar Klokkevisning ── */
+.card.collapsible { padding: 0; }
+
+.card-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 1.25rem;
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  border-radius: 14px;
+}
+.card-toggle h2 { margin: 0; font-size: 1rem; font-weight: 700; color: #4338ca; }
+.toggle-arrow {
+  font-size: 0.75rem; color: #9ca3af;
+  transition: transform .25s;
+  display: inline-block;
+}
+.card.collapsible.collapsed .toggle-arrow { transform: rotate(180deg); }
+
+.card-body {
+  padding: 0 1.25rem 1.1rem;
+  overflow: hidden;
+  transition: max-height .3s ease, opacity .25s;
+  max-height: 600px;
+  opacity: 1;
+}
+.card.collapsible.collapsed .card-body {
+  max-height: 0;
+  opacity: 0;
+  padding-bottom: 0;
+}
+
+/* ── Stoppeklokke i spillhode ── */
+.task-timer {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem; font-weight: 700;
+  color: #6366f1;
+  min-width: 3.5rem; text-align: right;
+}
+
+/* ── Resultat-progresjon ── */
+#result-progress {
+  font-size: 0.95rem; color: #374151;
+  margin-bottom: 1.25rem;
+  min-height: 1.4em;
+}
+.result-stats { flex-wrap: wrap; gap: 1.25rem 2rem; }
+.stat span { font-size: 2.2rem; }
+
+/* ── Øktlogg ── */
+#log-section { margin-top: 1.5rem; padding-bottom: 1rem; }
+
+.log-heading {
+  font-size: 1rem; font-weight: 700; color: #4338ca;
+  margin-bottom: 0.75rem;
+}
+
+.log-empty {
+  text-align: center; color: #9ca3af;
+  font-size: 0.9rem; padding: 1.5rem 0;
+}
+
+.log-entry {
+  display: flex; align-items: center; gap: 0.75rem;
+  background: white; border-radius: 12px;
+  padding: 0.875rem 1rem;
+  margin-bottom: 0.625rem;
+  box-shadow: 0 2px 8px rgba(67,56,202,.07);
+  border: 2px solid transparent;
+  transition: border-color .12s;
+}
+.log-entry:hover { border-color: #e0e7ff; }
+
+.log-badge {
+  width: 44px; min-width: 44px; height: 44px;
+  border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+}
+
+.log-info { flex: 1; min-width: 0; }
+
+.log-meta {
+  font-size: 0.78rem; color: #9ca3af;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 0.2rem;
+}
+.log-settings-label { color: #6366f1; font-weight: 600; }
+
+.log-score {
+  font-size: 1rem; font-weight: 700; color: #1e1b4b;
+  margin-bottom: 0.2rem;
+}
+
+.log-progress { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+.prog {
+  font-size: 0.78rem; font-weight: 600; padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+.prog.up   { background: #f0fdf4; color: #15803d; }
+.prog.down { background: #fef2f2; color: #b91c1c; }
+.prog.same { background: #f3f4f6; color: #6b7280; }
+
+.prog-best { font-size: 0.78rem; color: #9ca3af; align-self: center; }
+.prog-best.is-best { color: #d97706; font-weight: 700; }
+
+.log-more-btn {
+  display: block; width: 100%;
+  padding: 0.6rem; margin-top: 0.25rem;
+  background: none; border: 2px dashed #c7d2fe; border-radius: 10px;
+  color: #6366f1; font-size: 0.88rem; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  transition: background .12s, border-color .12s;
+}
+.log-more-btn:hover { background: #eef2ff; border-color: #a5b4fc; }
+
+.log-repeat-btn {
+  background: #eef2ff; border: 2px solid #c7d2fe; border-radius: 8px;
+  color: #4338ca; font-size: 0.82rem; font-weight: 700;
+  padding: 0.4rem 0.7rem; cursor: pointer; white-space: nowrap;
+  font-family: inherit; flex-shrink: 0;
+  transition: background .12s;
+}
+.log-repeat-btn:hover { background: #c7d2fe; }
+
+/* ── Visuell klokkeansikt-velger ── */
+.setting-row.face-picker-row {
+  flex-direction: column; align-items: flex-start; gap: 0.4rem;
+}
+.face-picker { display: flex; gap: 0.625rem; flex-wrap: wrap; }
+
+.face-option {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.3rem; cursor: pointer; user-select: none;
+}
+.face-option svg {
+  border: 2.5px solid #e0e7ff; border-radius: 10px;
+  display: block;
+  transition: border-color .14s, background .14s;
+}
+.face-option:hover svg { border-color: #a5b4fc; }
+.face-option.selected svg { border-color: #4338ca; background: #eef2ff; }
+
+.face-label { font-size: 0.72rem; color: #9ca3af; font-weight: 500; }
+.face-option.selected .face-label { color: #4338ca; font-weight: 700; }
