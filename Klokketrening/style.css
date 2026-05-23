@@ -6,23 +6,32 @@ body {
   min-height: 100dvh;
   display: flex;
   justify-content: center;
-  padding: 1rem 1rem 2rem;
+  padding: calc(48px + 1rem) 1rem 2rem;
 }
 
-/* ── Tilbake-lenke ── */
-.back-link {
-  display: inline-flex; align-items: center;
-  font-size: 0.82rem; color: #9ca3af; text-decoration: none;
-  margin-bottom: 0.5rem;
+/* ── Topplinje ── */
+.top-nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 48px;
+  background: #111111;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+  z-index: 100;
+}
+.nav-back {
+  font-size: 0.82rem; font-weight: 600;
+  color: #D4820A; text-decoration: none;
+  letter-spacing: 0.03em;
   transition: color .15s;
 }
-.back-link:hover { color: #4338ca; }
-
-/* ── Copyright ── */
-.copyright {
-  position: fixed; top: 0.6rem; right: 0.8rem;
-  font-size: 0.72rem; color: #c4b5fd;
-  pointer-events: none; user-select: none;
+.nav-back:hover { color: #F5A623; }
+.nav-title {
+  font-size: 0.82rem; font-weight: 700;
+  color: rgba(250,247,242,0.4);
+  margin-left: auto;
 }
 
 /* ── Screens ── */
