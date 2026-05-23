@@ -158,9 +158,136 @@
       color: var(--muted);
     }
 
+    /* ── Feedback ── */
+    .feedback {
+      width: 100%;
+      max-width: 700px;
+      margin-top: 3rem;
+    }
+
+    .feedback-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .feedback-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .fb-row { display: flex; flex-direction: column; gap: 0.5rem; }
+    .fb-row-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Emoji reactions */
+    .reactions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .reaction {
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 0.45rem 0.9rem;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.15s, background 0.15s;
+      line-height: 1;
+    }
+    .reaction:hover { transform: scale(1.15); border-color: var(--accent); }
+    .reaction.selected {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      transform: scale(1.1);
+    }
+
+    /* Exercise pills */
+    .pills { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .pill {
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      padding: 0.35rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .pill:hover { border-color: var(--accent); color: var(--text); }
+    .pill.selected {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    /* Textarea */
+    .feedback-box textarea {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 0.75rem;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 0.75rem 1rem;
+      resize: none;
+      height: 80px;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+    .feedback-box textarea::placeholder { color: var(--muted); opacity: 0.6; }
+    .feedback-box textarea:focus { border-color: var(--accent); }
+
+    /* Submit */
+    .fb-submit {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      align-self: flex-end;
+      transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
+    }
+    .fb-submit:hover {
+      background: #F5A623;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(212, 130, 10, 0.35);
+    }
+    .fb-submit:active { transform: translateY(0); }
+    .fb-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Success */
+    .fb-success {
+      display: none;
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .fb-success .fb-ok { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+
     footer {
       margin-top: auto;
-      padding-top: 3rem;
+      padding-top: 2.5rem;
       font-size: 0.72rem;
       color: #444444;
       letter-spacing: 0.04em;
@@ -177,7 +304,7 @@
 
   <main class="grid">
 
-    <a class="card card-1" href="Klokketrening/" target="_blank" rel="noopener">
+    <a class="card card-1" href="Klokketrening/">
       <span class="icon">🕐</span>
       <span class="card-badge">Klokke</span>
       <p class="card-title">Lær analog klokke</p>
@@ -185,7 +312,7 @@
       <span class="card-arrow">Start øvelsen →</span>
     </a>
 
-    <a class="card card-2" href="Lesetrening/" target="_blank" rel="noopener">
+    <a class="card card-2" href="Lesetrening/">
       <span class="icon">📖</span>
       <span class="card-badge">Lesing</span>
       <p class="card-title">Lesetrening</p>
@@ -195,7 +322,87 @@
 
   </main>
 
+  <section class="feedback">
+    <p class="feedback-label">Tilbakemelding</p>
+    <div class="feedback-box">
+      <form id="fbForm" action="https://formspree.io/f/xzdwvpga" method="POST">
+        <input type="hidden" name="_source" value="BliGod.ganddal.net" />
+
+        <div class="fb-row">
+          <span class="fb-row-label">Hvordan var det?</span>
+          <div class="reactions">
+            <button type="button" class="reaction" data-val="😕" title="Vanskelig">😕</button>
+            <button type="button" class="reaction" data-val="😐" title="Ok">😐</button>
+            <button type="button" class="reaction" data-val="😊" title="Bra">😊</button>
+            <button type="button" class="reaction" data-val="🔥" title="Veldig bra">🔥</button>
+          </div>
+          <input type="hidden" name="reaksjon" id="reaksjonInput" />
+        </div>
+
+        <div class="fb-row">
+          <span class="fb-row-label">Hvilken øvelse?</span>
+          <div class="pills">
+            <button type="button" class="pill" data-val="Klokketrening">🕐 Klokketrening</button>
+            <button type="button" class="pill" data-val="Lesetrening">📖 Lesetrening</button>
+            <button type="button" class="pill" data-val="Begge">Begge</button>
+          </div>
+          <input type="hidden" name="øvelse" id="øvelseInput" />
+        </div>
+
+        <div class="fb-row">
+          <span class="fb-row-label">Kommentar <span style="font-weight:400;text-transform:none;letter-spacing:0">(valgfritt)</span></span>
+          <textarea name="kommentar" placeholder="Noe du vil si?"></textarea>
+        </div>
+
+        <button type="submit" class="fb-submit" id="fbSubmit">Send inn →</button>
+      </form>
+      <div class="fb-success" id="fbSuccess">
+        <span class="fb-ok">✅</span>
+        Takk for tilbakemeldingen!
+      </div>
+    </div>
+  </section>
+
   <footer><a href="https://uno.ganddal.net" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">© Geddi</a></footer>
+
+  <script>
+    // Emoji reactions
+    document.querySelectorAll('.reaction').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.reaction').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById('reaksjonInput').value = btn.dataset.val;
+      });
+    });
+
+    // Exercise pills
+    document.querySelectorAll('.pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.pill').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById('øvelseInput').value = btn.dataset.val;
+      });
+    });
+
+    // Form submit via fetch
+    const form = document.getElementById('fbForm');
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const btn = document.getElementById('fbSubmit');
+      btn.disabled = true;
+      btn.textContent = 'Sender…';
+      try {
+        await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' }
+        });
+      } finally {
+        form.style.display = 'none';
+        document.getElementById('fbSuccess').style.display = 'block';
+      }
+    });
+  </script>
 
 </body>
 </html>
