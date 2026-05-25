@@ -39,6 +39,14 @@ body {
   color: rgba(250,247,242,0.4);
   margin-left: auto;
 }
+.nav-next {
+  font-size: 0.82rem; font-weight: 700;
+  color: rgba(250,247,242,0.4);
+  margin-left: auto;
+  text-decoration: none;
+  transition: color .15s;
+}
+.nav-next:hover { color: #F5A623; }
 
 /* ── Screens ── */
 .screen { display: none; width: 100%; max-width: 560px; }
