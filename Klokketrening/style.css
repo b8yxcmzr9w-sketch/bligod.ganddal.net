@@ -384,6 +384,23 @@ input[type="color"] {
 }
 .log-repeat-btn:hover { background: #F0D5AA; }
 
+/* ── Uno-logo footer ── */
+.uno-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #111111;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 6px 13px 6px 9px;
+  text-decoration: none;
+  transition: background 0.15s;
+  margin-top: 2rem;
+}
+.uno-logo:hover { background: #2a2a2a; }
+.uno-logo img { width: 22px; height: 22px; object-fit: contain; filter: invert(1); }
+.uno-logo span { font-size: 0.88rem; font-weight: 700; color: #FAF7F2; letter-spacing: 0.02em; }
+
 /* ── Visuell klokkeansikt-velger ── */
 .setting-row.face-picker-row {
   flex-direction: column; align-items: flex-start; gap: 0.4rem;
