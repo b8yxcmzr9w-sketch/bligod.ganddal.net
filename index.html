@@ -23,7 +23,7 @@
       --text: #FAF7F2;
       --muted: #888888;
       --card-1: #F5A623;
-      --card-2: #4ade80;
+      --card-2: #D4820A;
     }
 
     body {
@@ -101,7 +101,7 @@
     }
 
     .card-1::before { background: radial-gradient(circle at 20% 20%, rgba(245, 166, 35, 0.08), transparent 70%); }
-    .card-2::before { background: radial-gradient(circle at 20% 20%, rgba(74, 222, 128, 0.08), transparent 70%); }
+    .card-2::before { background: radial-gradient(circle at 20% 20%, rgba(212, 130, 10, 0.08), transparent 70%); }
 
     .card:hover {
       background: var(--surface-hover);
@@ -109,7 +109,7 @@
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
     }
     .card-1:hover { border-color: var(--card-1); box-shadow: 0 16px 40px rgba(245, 166, 35, 0.15); }
-    .card-2:hover { border-color: var(--card-2); box-shadow: 0 16px 40px rgba(74, 222, 128, 0.15); }
+    .card-2:hover { border-color: var(--card-2); box-shadow: 0 16px 40px rgba(212, 130, 10, 0.15); }
     .card:hover::before { opacity: 1; }
 
     .card:active { transform: translateY(-2px); }
