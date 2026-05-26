@@ -399,39 +399,24 @@ function App() {
     return Math.max(0, (ordet || "").length * sekPerBokstav);
   }
 
-  // Les opp ord med bokstavanimasjon synkronisert til 80ms/bokstav
-  function lesOppMedAnimasjon(ordet, setAnimer, callback) {
-    setAnimer(true);
-    if (!lesehjelp) { if (callback) callback(); return; }
-    const taletid = ordet.length * MS_PER_BOKSTAV;
-    const kjør = () => {
-      const u = new SpeechSynthesisUtterance(ordet);
-      const sprLang = { no:"nb-NO", en:"en-GB", de:"de-DE", es:"es-ES" };
-      u.lang = sprLang[genSpr] || "nb-NO";
-      let ferdig = false;
-      const avslutt = () => {
-        if (ferdig) return;
-        ferdig = true;
-        if (callback) callback();
-      };
-      u.onend = avslutt;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(u);
-      setTimeout(avslutt, taletid + 600);
-    };
-    if (forsinkelse === 0) { kjør(); } else { speechTimerRef.current = setTimeout(kjør, forsinkelse * 1000); }
-  }
-
-  // Viser ordet, venter på opplesing, så viser i visTid sekunder, så gjett
+  // Viser ordet i visTidSek sekunder. Tale starter parallelt – venter ikke på fullføring.
   function visOgVent(ordet, visTidSek, etter) {
     const sesjon = sesjonRef.current;
-    lesOppMedAnimasjon(ordet, () => {}, () => {
+    if (lesehjelp) {
+      const kjør = () => {
+        const u = new SpeechSynthesisUtterance(ordet);
+        const sprLang = { no:"nb-NO", en:"en-GB", de:"de-DE", es:"es-ES" };
+        u.lang = sprLang[genSpr] || "nb-NO";
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+      };
+      if (forsinkelse === 0) kjør();
+      else speechTimerRef.current = setTimeout(kjør, forsinkelse * 1000);
+    }
+    setTimeout(() => {
       if (sesjonRef.current !== sesjon) return;
-      setTimeout(() => {
-        if (sesjonRef.current !== sesjon) return;
-        etter();
-      }, visTidSek * 1000);
-    });
+      etter();
+    }, visTidSek * 1000);
   }
 
   function startOrd() {
