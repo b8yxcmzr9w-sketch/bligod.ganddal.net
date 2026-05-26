@@ -32,6 +32,8 @@
   .nav-next { font-size: 0.82rem; font-weight: 700; color: rgba(250,247,242,0.4); margin-left: auto; text-decoration: none; transition: color .15s; }
   .nav-next:hover { color: #F5A623; }
   textarea { font-family: inherit; }
+  body[data-modus="ord"] #vote-widget,
+  body[data-modus="lesing"] #vote-widget { display: none !important; }
   input[type=range] { width: 100%; accent-color: #D4820A; }
   button { font-family: inherit; transition: background 0.15s, opacity 0.15s; }
   button:hover:not(:disabled) { background: #F5EDE0 !important; }
@@ -388,6 +390,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem("lesetrening_innstillinger", JSON.stringify({ visTid, lesehjelp, forsinkelse, vanskelighet, tidsBegrensning }));
   }, [visTid, lesehjelp, forsinkelse, vanskelighet, tidsBegrensning]);
+
+  useEffect(() => {
+    document.body.dataset.modus = modus;
+  }, [modus]);
 
   function parseOrd(tekst) {
     return tekst.split(/[\s,]+/).map(s => s.replace(/[^a-zA-ZæøåÆØÅ]/g,"")).filter(Boolean);

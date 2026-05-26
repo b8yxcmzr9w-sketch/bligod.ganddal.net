@@ -161,6 +161,15 @@
       document.getElementById('vote-down').style.opacity = v === 'down' ? '1' : '0.2';
       document.getElementById('vote-thanks').style.display = 'block';
     }
+    // Skjul widget mens spillet pågår
+    var widget = document.getElementById('vote-widget');
+    var gameScreen = document.getElementById('game-screen');
+    function oppdaterSynlighet() {
+      widget.style.display = gameScreen.classList.contains('active') ? 'none' : 'flex';
+    }
+    new MutationObserver(oppdaterSynlighet).observe(gameScreen, { attributes: true, attributeFilter: ['class'] });
+    oppdaterSynlighet();
+
     var prev = localStorage.getItem(KEY);
     if (prev) apply(prev);
     window.sendVote = function(v) {
