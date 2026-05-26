@@ -1,0 +1,58 @@
+{
+  "3": [
+    ["act",3],["age",4],["ago",3],["aid",2],["aim",3],["air",4],["all",5],["and",5],["any",5],["are",5],
+    ["ask",4],["bad",4],["bag",3],["big",5],["bit",4],["bug",3],["bus",4],["but",5],["buy",4],["can",5],
+    ["car",4],["cut",4],["dad",4],["did",5],["dog",4],["dry",3],["ear",3],["eat",4],["end",4],["eye",4],
+    ["far",4],["fat",3],["fix",3],["fly",4],["fun",5],["get",5],["got",4],["had",4],["hat",3],["her",5],
+    ["him",5],["his",5],["hit",4],["hot",4],["how",5],["ice",4],["job",4],["joy",3],["key",4],["sky",4]
+  ],
+  "4": [
+    ["able",4],["also",4],["area",4],["back",4],["ball",5],["band",3],["base",3],["bath",3],["been",5],["best",5],
+    ["bike",4],["blue",4],["body",4],["bold",3],["book",5],["born",3],["both",4],["busy",4],["call",4],["calm",3],
+    ["came",4],["card",4],["care",4],["cash",3],["city",4],["code",4],["coin",3],["come",5],["cool",5],["copy",3],
+    ["cost",3],["data",4],["date",4],["deal",3],["dear",3],["deep",4],["done",4],["door",4],["down",4],["draw",4],
+    ["drop",3],["dust",2],["each",4],["earn",3],["east",3],["easy",4],["edge",3],["else",4],["even",4],["ever",4]
+  ],
+  "5": [
+    ["about",5],["above",4],["after",5],["again",5],["agree",4],["alarm",3],["alert",3],["alike",3],["alive",4],["alone",4],
+    ["along",4],["angry",4],["apart",4],["apple",5],["arena",3],["arise",3],["asked",4],["avoid",4],["award",3],["aware",4],
+    ["beach",5],["begin",4],["being",5],["below",4],["blank",3],["blast",3],["blend",3],["block",4],["bloom",3],["board",4],
+    ["bonus",3],["boost",4],["brave",4],["break",5],["brief",3],["bring",4],["broke",3],["built",4],["burst",3],["cabin",2],
+    ["candy",4],["carry",4],["catch",4],["chain",3],["chair",4],["chase",4],["check",4],["chess",4],["chill",5],["class",5]
+  ],
+  "6": [
+    ["access",4],["action",4],["active",4],["actual",4],["affect",3],["agenda",3],["almost",4],["animal",4],["answer",4],["anyone",4],
+    ["around",4],["arrive",4],["artist",4],["attack",4],["autumn",3],["battle",4],["beauty",4],["before",5],["behind",4],["belong",3],
+    ["better",5],["beyond",3],["bitter",3],["bother",3],["bounce",3],["bright",4],["broken",4],["bubble",3],["button",4],["cannot",4],
+    ["career",4],["castle",4],["caught",4],["change",5],["charge",4],["choose",4],["chosen",3],["circle",4],["clever",4],["closer",3],
+    ["colour",4],["coming",4],["create",5],["danger",4],["decide",4],["defend",3],["design",4],["dinner",4],["double",4],["dragon",4]
+  ],
+  "7": [
+    ["ability",4],["absence",3],["account",4],["achieve",4],["amazing",5],["awesome",5],["balance",4],["because",5],["believe",5],["beneath",3],
+    ["between",5],["breathe",4],["brought",4],["brother",4],["captain",4],["careful",4],["changes",4],["chapter",4],["charity",3],["choices",4],
+    ["classic",4],["climate",4],["closely",3],["combine",3],["compete",3],["connect",4],["control",4],["cooking",3],["courage",4],["devoted",3],
+    ["digital",4],["discuss",4],["display",4],["embrace",3],["endless",4],["enjoyed",4],["excited",5],["explore",4],["failure",4],["falling",4],
+    ["fantasy",4],["fiction",4],["fingers",3],["focused",4],["forward",4],["freedom",5],["friends",5],["genuine",4],["growing",3],["harmony",3]
+  ],
+  "8": [
+    ["absolute",3],["academic",4],["achieved",4],["acquired",3],["activity",4],["advanced",4],["although",4],["anything",5],["argument",4],["assembly",3],
+    ["balanced",3],["baseball",4],["becoming",4],["birthday",5],["breaking",4],["building",4],["campaign",3],["carnival",3],["catching",4],["champion",5],
+    ["changing",4],["climbing",4],["clothing",3],["combined",3],["complete",4],["confused",4],["consider",4],["continue",4],["creative",5],["crossing",3],
+    ["daughter",3],["deciding",3],["designed",4],["detailed",3],["discover",4],["exciting",5],["exercise",5],["festival",4],["finished",4],["football",5],
+    ["grateful",4],["habitual",2],["handling",3],["happened",4],["historic",3],["homework",5],["imagined",3],["included",4],["inspired",4],["internet",5]
+  ],
+  "9": [
+    ["abandoned",3],["abilities",3],["accepting",3],["according",4],["adventure",5],["afternoon",4],["alongside",3],["ambitious",4],["answering",3],["available",4],
+    ["beginning",4],["believing",4],["brilliant",4],["butterfly",4],["calculate",4],["carefully",4],["celebrate",4],["challenge",5],["character",4],["chemistry",4],
+    ["Christmas",4],["collected",3],["community",4],["completed",4],["computers",4],["concerned",3],["confident",5],["connected",4],["continued",3],["different",5],
+    ["directing",3],["discussed",3],["displayed",3],["education",4],["effective",4],["emergency",4],["emotional",4],["energised",3],["enjoyable",4],["excellent",5],
+    ["exploring",4],["fantastic",5],["favourite",5],["financial",3],["following",4],["forgotten",4],["framework",3],["freestyle",4],["gathering",3],["genuinely",3]
+  ],
+  "10": [
+    ["absolutely",4],["acceptance",4],["accomplish",4],["activities",4],["additional",3],["adjustment",3],["afterwards",3],["aggressive",3],["altogether",3],["ambassador",3],
+    ["apparently",4],["appearance",4],["appreciate",4],["astounding",3],["basketball",4],["birthplace",3],["calculated",3],["capability",3],["challenged",4],["characters",4],
+    ["celebrated",4],["collection",4],["completely",4],["confidence",5],["connection",4],["considered",4],["constantly",3],["courageous",4],["creativity",5],["decoration",3],
+    ["dedication",4],["definitely",4],["department",3],["determined",4],["developing",4],["difficulty",4],["discovered",4],["displaying",3],["elementary",3],["employment",3],
+    ["encouraged",4],["energising",3],["enthusiast",4],["excitement",5],["experience",5],["expression",4],["extensions",2],["foundation",4],["friendship",5],["generation",4]
+  ]
+}

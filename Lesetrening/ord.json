@@ -1,0 +1,58 @@
+{
+  "3": [
+    ["bil",5],["dag",5],["hus",5],["seg",5],["meg",5],["deg",5],["ham",4],["hun",5],["han",5],["jeg",5],
+    ["det",5],["den",5],["din",4],["sin",4],["sol",4],["mat",4],["mor",4],["far",4],["ser",4],["tar",4],
+    ["vil",4],["kan",5],["kom",4],["dro",3],["ble",4],["noe",5],["nok",4],["tok",4],["var",4],["gir",3],
+    ["syk",3],["tur",4],["ski",4],["tre",4],["fly",3],["rom",4],["tak",3],["tid",4],["par",3],["pen",3],
+    ["kul",3],["lei",3],["løp",3],["gut",3],["opp",4],["inn",4],["ute",4],["fra",5],["for",5],["med",5]
+  ],
+  "4": [
+    ["ball",4],["barn",4],["best",4],["dans",3],["ditt",4],["film",5],["folk",5],["game",4],["hjem",4],["høst",3],
+    ["jobb",4],["kamp",4],["kart",3],["kule",4],["land",4],["leke",4],["løpe",3],["mote",3],["natt",4],["nett",5],
+    ["nytt",4],["park",4],["plan",4],["ring",3],["rock",3],["sang",4],["skip",3],["slag",3],["sted",4],["stor",4],
+    ["sunn",3],["tank",3],["test",4],["type",4],["vann",4],["vind",3],["vite",4],["ekte",3],["gris",2],["hund",4],
+    ["katt",4],["nerd",3],["sove",4],["grei",4],["rask",4],["spor",3],["feil",4],["glad",4],["klem",3],["smil",3]
+  ],
+  "5": [
+    ["bruke",4],["danse",3],["drømt",3],["ekorn",2],["greit",4],["grønn",3],["hoppe",3],["humor",4],["kaffe",5],["kjøre",4],
+    ["komme",4],["krone",3],["kunst",4],["lytte",3],["neste",4],["norsk",4],["pizza",5],["plast",3],["prøve",4],["punkt",3],
+    ["raskt",4],["rolig",4],["runde",3],["scene",3],["smart",4],["snøen",3],["spill",5],["sport",5],["sterk",4],["synes",4],
+    ["trene",4],["vente",4],["ville",4],["glede",3],["bevis",3],["bratt",2],["bygge",3],["drikk",3],["finne",4],["flott",4],
+    ["farge",4],["gjøre",4],["happy",4],["blikk",3],["fjell",4],["kvist",2],["laget",3],["masse",4],["orden",3],["spane",2]
+  ],
+  "6": [
+    ["bruker",4],["danser",3],["elsker",5],["gaming",5],["giftig",3],["gruppe",4],["hjelpe",3],["hopper",3],["jakten",3],["jobber",4],
+    ["kjempe",4],["klasse",5],["kommet",4],["kultur",4],["lenger",4],["løping",3],["morsom",4],["musikk",5],["nesten",4],["ordbok",3],
+    ["penger",5],["prater",3],["prøver",4],["regler",4],["rutine",3],["samlet",3],["skaper",3],["skolen",5],["sliter",3],["snakke",4],
+    ["sprint",3],["starte",4],["stemme",4],["sommer",4],["vinter",4],["vinner",4],["fisker",2],["læring",4],["trener",4],["elsket",4],
+    ["hjerne",4],["takler",3],["finner",4],["mingle",3],["tegner",3],["trygge",3],["farlig",4],["feirer",3],["lykkes",4],["streke",2]
+  ],
+  "7": [
+    ["digital",4],["feiring",3],["fjorden",3],["fotball",5],["friluft",3],["geniale",2],["gjennom",4],["hjelper",3],["hopping",3],["inngang",3],
+    ["kjemper",3],["klasser",4],["klatrer",3],["kompise",4],["konsert",4],["kreativ",4],["lekende",3],["løsning",4],["mobilen",5],["morsomt",4],
+    ["normalt",3],["passord",5],["planene",3],["premier",3],["prøvene",3],["sjansen",4],["skilles",3],["skjerme",4],["slutter",3],["snakker",4],
+    ["stadion",3],["starten",3],["stemmer",4],["strekke",3],["tilbake",4],["trening",5],["typiske",3],["vanlige",4],["vinnere",4],["bursdag",4],
+    ["drikker",3],["gruppen",4],["kjenner",4],["klimaet",3],["oppgave",4],["rollene",3],["skrevet",3],["treffer",3],["pressen",3],["leketøy",3]
+  ],
+  "8": [
+    ["begynner",4],["blogging",4],["chatting",4],["diskuter",3],["favoritt",4],["fremover",4],["gangster",3],["klassisk",4],["klatring",4],["kompiser",4],
+    ["kreative",4],["nettsted",4],["oppstart",4],["passende",3],["prestere",3],["prosjekt",4],["pålogget",4],["snakking",3],["stemning",4],["strammer",2],
+    ["streamer",5],["tilstand",3],["training",4],["trekking",3],["hjelpsom",3],["kjenning",3],["modeller",3],["opplever",4],["oversikt",4],["passasje",2],
+    ["politikk",3],["skjermen",5],["skoledag",4],["teknolog",3],["tenkning",3],["vennskap",5],["avansert",3],["drikking",2],["drivende",3],["flygende",3],
+    ["joggetur",3],["kjøretøy",3],["rulleski",3],["smilende",3],["sykkelen",4],["verdsett",2],["vinnende",3],["skøyting",3],["stresset",4],["fjoråret",3]
+  ],
+  "9": [
+    ["aktivitet",4],["bibliotek",4],["demokrati",3],["drivkraft",3],["fotballen",4],["fremtiden",4],["gangstere",2],["hjelpende",3],["jobbskift",2],["klassiske",4],
+    ["kompetent",3],["kontakter",4],["kulturell",3],["legendene",3],["løsninger",4],["melodiene",3],["mobbingen",4],["musikeren",3],["overlevde",3],["rullestol",3],
+    ["samarbeid",4],["skatepark",4],["snowboard",5],["spilleren",4],["turnering",4],["ungdommer",4],["venninner",4],["adrenalin",4],["balansert",3],["diskutere",3],
+    ["dronefoto",3],["eksamenen",4],["elevrådet",4],["fantasier",3],["filmkveld",3],["halvtiden",3],["informere",3],["kompisene",4],["lærlingen",3],["midtbanen",3],
+    ["oppgavene",4],["passionen",3],["poengsumm",3],["rapporten",3],["skrivende",3],["strålende",4],["ukentlige",3],["årstidene",3],["kjæresten",5],["karrieren",4]
+  ],
+  "10": [
+    ["basketball",4],["barnehagen",3],["brettspill",4],["datasystem",3],["dinosaurer",3],["drømmejobb",4],["elektronik",3],["fartsgrens",2],["festivalen",4],["frokostene",3],
+    ["gitarspill",3],["hjertesorg",3],["intervjuet",3],["kameratene",4],["karusellen",3],["kompetanse",4],["komputeren",4],["kostnadene",3],["læreplanen",3],["nettverket",4],
+    ["opplevelse",4],["oversikten",4],["plassering",4],["poengstand",3],["prestasjon",4],["problemene",4],["samarbeide",4],["skateboard",5],["skitrekket",3],["snøbrettet",3],
+    ["snøscooter",3],["sommerleir",4],["sportsklub",3],["strømmende",4],["tenåringen",4],["tilskuerne",3],["trampoline",4],["ungdomshus",3],["utfordring",4],["venneflokk",4],
+    ["videospill",5],["volleyball",4],["vennlighet",4],["øvingstime",3],["svømmehall",4],["datamaskin",4],["innsamling",3],["lekerommet",3],["idrettslag",4],["spennenden",2]
+  ]
+}

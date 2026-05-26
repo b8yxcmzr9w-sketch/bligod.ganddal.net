@@ -55,25 +55,47 @@ const { useState, useEffect, useRef } = React;
 
 const MS_PER_BOKSTAV = 80;
 
-function lagLignende(ord) {
+const VANSKELIGHET = [
+  { label: "Enkel",     alternativ: 2, tetthet: 1 },
+  { label: "Normal",    alternativ: 3, tetthet: 2 },
+  { label: "Vanskelig", alternativ: 4, tetthet: 3 },
+];
+
+function lagLignende(ord, tetthet) {
   const pool = [];
   const bokstaver = "abcdefghijklmnoprstuvæøå";
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 40; i++) {
     let kandidat = ord;
-    const type = Math.floor(Math.random() * 3);
-    if (type === 0 && ord.length > 1) {
+    if (tetthet === 1) {
+      // Enkel: bytt 2–3 tegn → tydelig forskjellig
+      let k = ord;
+      const n = 2 + Math.floor(Math.random() * 2);
+      for (let j = 0; j < n; j++) {
+        const pos = Math.floor(Math.random() * k.length);
+        k = k.slice(0, pos) + bokstaver[Math.floor(Math.random()*bokstaver.length)] + k.slice(pos+1);
+      }
+      kandidat = k;
+    } else if (tetthet === 2) {
+      // Normal: 1 tegn-bytte, swap eller forleng
+      const type = Math.floor(Math.random() * 3);
+      if (type === 0 && ord.length > 1) {
+        const pos = Math.floor(Math.random() * ord.length);
+        kandidat = ord.slice(0, pos) + bokstaver[Math.floor(Math.random()*bokstaver.length)] + ord.slice(pos+1);
+      } else if (type === 1 && ord.length > 2) {
+        const pos = Math.floor(Math.random() * (ord.length - 1));
+        kandidat = ord.slice(0, pos) + ord[pos+1] + ord[pos] + ord.slice(pos+2);
+      } else {
+        kandidat = ord + bokstaver[Math.floor(Math.random()*bokstaver.length)];
+      }
+    } else {
+      // Vanskelig: nøyaktig 1 tegn-bytte, samme lengde
       const pos = Math.floor(Math.random() * ord.length);
       kandidat = ord.slice(0, pos) + bokstaver[Math.floor(Math.random()*bokstaver.length)] + ord.slice(pos+1);
-    } else if (type === 1 && ord.length > 2) {
-      const pos = Math.floor(Math.random() * (ord.length - 1));
-      kandidat = ord.slice(0, pos) + ord[pos+1] + ord[pos] + ord.slice(pos+2);
-    } else {
-      kandidat = ord + bokstaver[Math.floor(Math.random()*bokstaver.length)];
     }
     if (kandidat !== ord && kandidat.length > 1 && !pool.includes(kandidat)) pool.push(kandidat);
     if (pool.length >= 3) break;
   }
-  while (pool.length < 3) pool.push(ord + "x" + pool.length);
+  while (pool.length < 3) pool.push(ord.slice(0, -1) + bokstaver[pool.length]);
   return pool.slice(0, 3);
 }
 
@@ -166,7 +188,10 @@ function beregnScore(tid_ms, antOrd, prosent) {
 }
 function innstBadge(innst) {
   if (!innst) return null;
-  return `${innst.antallAlternativ}✓ · ${innst.tidsBegrensning}s`;
+  const vLabel = innst.vanskelighet
+    ? (VANSKELIGHET[innst.vanskelighet - 1]?.label || "?")
+    : (innst.antallAlternativ ? `${innst.antallAlternativ}✓` : "?");
+  return `${vLabel} · ${innst.tidsBegrensning}s`;
 }
 
 const IKONER = ["🦊","🐻","🦁","🐯","🦋","🌊","🌈","🍎","🚀","⭐","🎯","🌸","🦀","🌙","🎪","🏔️","🎸","🌺","🦜","🐬","🎨","🏄","🌿","🍀","🎭"];
@@ -240,7 +265,12 @@ function App() {
   const visTidRef = useRef(getInnst("visTid", 5));
   const [lesehjelp, setLesehjelp] = useState(() => getInnst("lesehjelp", false));
   const [forsinkelse, setForsinkelse] = useState(() => getInnst("forsinkelse", 1));
-  const [antallAlternativ, setAntallAlternativ] = useState(() => getInnst("antallAlternativ", 4));
+  const [vanskelighet, setVanskelighet] = useState(() => {
+    const v = getInnst("vanskelighet", null);
+    if (v !== null) return v;
+    const a = getInnst("antallAlternativ", 3);
+    return a <= 2 ? 1 : a === 3 ? 2 : 3;
+  });
   const [tidsBegrensning, setTidsBegrensning] = useState(() => getInnst("tidsBegrensning", 5));
   const [gjenværendeTid, setGjenværendeTid] = useState(0);
 
@@ -284,10 +314,59 @@ function App() {
     return v ? parseInt(v) : null;
   });
 
+  const [genLengde, setGenLengde] = useState(null);
+  const [genVariasjon, setGenVariasjon] = useState(0);
+  const [genSpr, setGenSpr] = useState("no");
+  const [genStatus, setGenStatus] = useState("");   // "", "laster", "feil"
+  const genDataRef = useRef({});
+
   function getCtx() {
     if (!audioCtx.current) audioCtx.current = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.current.state === "suspended") audioCtx.current.resume();
     return audioCtx.current;
+  }
+
+  function velgFrekvensvektet(liste, antall) {
+    const pool = [];
+    liste.forEach(([ord, vekt]) => {
+      for (let i = 0; i < vekt; i++) pool.push(ord);
+    });
+    const valgt = new Set();
+    let forsøk = 0;
+    while (valgt.size < Math.min(antall, liste.length) && forsøk < 500) {
+      valgt.add(pool[Math.floor(Math.random() * pool.length)]);
+      forsøk++;
+    }
+    return [...valgt].sort(() => Math.random() - 0.5);
+  }
+
+  async function genererOrd(lengde, variasjon, spr) {
+    const s = spr || genSpr;
+    setGenLengde(lengde);
+    setGenStatus("");
+    if (!genDataRef.current[s]) {
+      setGenStatus("laster");
+      const urlMap = { no:"ord.json", en:"ord-en.json", de:"ord-de.json", es:"ord-es.json" };
+      const url = urlMap[s] || "ord.json";
+      try {
+        const r = await fetch(url);
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        genDataRef.current[s] = await r.json();
+        setGenStatus("");
+      } catch(e) {
+        console.error("Kunne ikke laste " + url + ":", e);
+        setGenStatus("feil");
+        return;
+      }
+    }
+    const data = genDataRef.current[s];
+    const kombinert = [];
+    for (let l = Math.max(3, lengde - variasjon); l <= Math.min(10, lengde + variasjon); l++) {
+      const liste = data[String(l)] || [];
+      kombinert.push(...liste);
+    }
+    if (!kombinert.length) return;
+    setInputTekst(velgFrekvensvektet(kombinert, 10).join("\n"));
   }
 
   useEffect(() => {
@@ -306,8 +385,8 @@ function App() {
   }, [inputTekst]);
 
   useEffect(() => {
-    localStorage.setItem("lesetrening_innstillinger", JSON.stringify({ visTid, lesehjelp, forsinkelse, antallAlternativ, tidsBegrensning }));
-  }, [visTid, lesehjelp, forsinkelse, antallAlternativ, tidsBegrensning]);
+    localStorage.setItem("lesetrening_innstillinger", JSON.stringify({ visTid, lesehjelp, forsinkelse, vanskelighet, tidsBegrensning }));
+  }, [visTid, lesehjelp, forsinkelse, vanskelighet, tidsBegrensning]);
 
   function parseOrd(tekst) {
     return tekst.split(/[\s,]+/).map(s => s.replace(/[^a-zA-ZæøåÆØÅ]/g,"")).filter(Boolean);
@@ -315,8 +394,8 @@ function App() {
 
   function beregnTid(ordet) {
     const v = visTidRef.current;
-    const sekPerBokstav = 0.08 * Math.pow(15, (v - 1) / 9);
-    return Math.max(0.15, (ordet || "").length * sekPerBokstav);
+    const sekPerBokstav = 0.02 * Math.pow(30, (v - 1) / 9);
+    return Math.max(0, (ordet || "").length * sekPerBokstav);
   }
 
   // Les opp ord med bokstavanimasjon synkronisert til 80ms/bokstav
@@ -326,7 +405,8 @@ function App() {
     const taletid = ordet.length * MS_PER_BOKSTAV;
     const kjør = () => {
       const u = new SpeechSynthesisUtterance(ordet);
-      u.lang = "nb-NO";
+      const sprLang = { no:"nb-NO", en:"en-GB", de:"de-DE", es:"es-ES" };
+      u.lang = sprLang[genSpr] || "nb-NO";
       let ferdig = false;
       const avslutt = () => {
         if (ferdig) return;
@@ -395,7 +475,7 @@ function App() {
       tid: elapsed, ord: antOrd, riktige: r, feil: f, prosent: pct,
       score: beregnScore(elapsed, antOrd, pct),
       ordliste: [...ordliste].sort(),
-      innstillinger: { visTid, antallAlternativ, tidsBegrensning, lesehjelp, forsinkelse }
+      innstillinger: { visTid, vanskelighet, tidsBegrensning, lesehjelp, forsinkelse }
     };
     const ny = [entry, ...JSON.parse(localStorage.getItem("lesetrening_historikk") || "[]")].slice(0, 20);
     setHistorikk(ny);
@@ -435,7 +515,8 @@ function App() {
         setVisOrd(false); setAnimerOrd(false);
         timerRef.current = setTimeout(() => {
           const riktig = ord[indeks];
-          const like = lagLignende(riktig).slice(0, antallAlternativ - 1);
+          const vInfo = VANSKELIGHET[vanskelighet - 1];
+          const like = lagLignende(riktig, vInfo.tetthet).slice(0, vInfo.alternativ - 1);
           const alle = [...like, riktig].sort(() => Math.random() - 0.5);
           setValg(alle); setForsøk(0); setMelding(""); setFase("gjett");
         }, 1000);
@@ -516,8 +597,56 @@ function App() {
       <h1 style={s.h1}>📖 Lær lesing</h1>
 
       <div style={s.cardBox}>
-        <p style={{fontSize:13, color:"#888", marginBottom:"0.75rem"}}>Lim inn ord eller en setning du vil øve på.</p>
-        <textarea value={inputTekst} onChange={e => setInputTekst(e.target.value)} rows={5} placeholder={"bil\nbuss\ntog\nsykkel"} style={s.textarea} />
+        <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"0.5rem"}}>
+          <h2 style={{fontSize:15, fontWeight:700, color:"#111111"}}>Finn ord å øve på – eller skriv dine egne</h2>
+          <div style={{display:"flex", gap:3, flexShrink:0, marginLeft:8}}>
+            {[["no","🇳🇴"],["en","🇬🇧"],["de","🇩🇪"],["es","🇪🇸"]].map(([kode, flagg]) => (
+              <button key={kode} onClick={() => {
+                setGenSpr(kode);
+                if (genLengde !== null) genererOrd(genLengde, genVariasjon, kode);
+              }} style={{
+                fontSize:17, lineHeight:1, padding:"3px 6px", borderRadius:7, cursor:"pointer", fontFamily:"inherit",
+                border: genSpr===kode ? "2px solid #111" : "1px solid #EDE3D4",
+                background: genSpr===kode ? "#F5EDE0" : "#fff",
+              }}>{flagg}</button>
+            ))}
+          </div>
+        </div>
+        <p style={{fontSize:12, color:"#888", marginBottom:"0.65rem"}}>Velg antall bokstaver – 10 ord genereres automatisk</p>
+        <div style={{display:"flex", gap:5, flexWrap:"wrap", marginBottom:"0.6rem"}}>
+          {[3,4,5,6,7,8,9,10].map(n => (
+            <button key={n} onClick={() => genererOrd(n, genVariasjon, genSpr)} style={{
+              fontSize:14, padding:"7px 11px", borderRadius:8, cursor:"pointer", fontFamily:"inherit",
+              border:"1px solid #EDE3D4",
+              background: genLengde===n ? "#111111" : "#fff",
+              color: genLengde===n ? "#fff" : "#555",
+              fontWeight: genLengde===n ? 700 : 400
+            }}>{n}</button>
+          ))}
+        </div>
+        <div style={{display:"flex", alignItems:"center", gap:5, flexWrap:"wrap", marginBottom:"0.75rem"}}>
+          <span style={{fontSize:12, color:"#aaa", marginRight:2}}>Variasjon</span>
+          {[0,1,2,3].map(v => (
+            <button key={v} onClick={() => { setGenVariasjon(v); if (genLengde !== null) genererOrd(genLengde, v, genSpr); }} style={{
+              fontSize:13, padding:"5px 10px", borderRadius:7, cursor:"pointer", fontFamily:"inherit",
+              border:"1px solid #EDE3D4",
+              background: genVariasjon===v ? "#D4820A" : "#fff",
+              color: genVariasjon===v ? "#fff" : "#777",
+              fontWeight: genVariasjon===v ? 600 : 400
+            }}>{v===0 ? "±0" : `±${v}`}</button>
+          ))}
+          {genVariasjon > 0 && genLengde && <span style={{fontSize:11, color:"#aaa", marginLeft:4}}>
+            {Math.max(3,genLengde-genVariasjon)}–{Math.min(10,genLengde+genVariasjon)} bokstaver
+          </span>}
+        </div>
+        {genStatus === "laster" && <p style={{fontSize:12, color:"#aaa", marginBottom:8}}>Laster ordliste…</p>}
+        {genStatus === "feil" && <p style={{fontSize:12, color:"#c0392b", marginBottom:8}}>
+          Kunne ikke laste ordliste. Åpne siden via en lokal webserver.
+        </p>}
+        <div style={{borderTop:"1px solid #EDE3D4", margin:"0 -20px 0.75rem", padding:"0.75rem 20px 0"}}>
+          <p style={{fontSize:12, color:"#aaa", marginBottom:"0.5rem"}}>… eller lim inn egne ord</p>
+          <textarea value={inputTekst} onChange={e => setInputTekst(e.target.value)} rows={4} placeholder={"bil\nbuss\ntog\nsykkel"} style={s.textarea} />
+        </div>
       </div>
 
       <div style={s.cardBox}>
@@ -532,10 +661,10 @@ function App() {
         </div>
 
         <div style={s.row}>
-          <label style={s.label}>Svaralternativ</label>
+          <label style={s.label}>Vanskelighet</label>
           <div style={{display:"flex", gap:6}}>
-            {[2,3,4].map(n => (
-              <button key={n} onClick={() => setAntallAlternativ(n)} style={{fontSize:14, padding:"6px 14px", borderRadius:8, cursor:"pointer", border:"1px solid #EDE3D4", background:antallAlternativ===n?"#111111":"#fff", color:antallAlternativ===n?"#fff":"#555", fontFamily:"inherit", fontWeight:antallAlternativ===n?600:400}}>{n}</button>
+            {VANSKELIGHET.map((v, i) => (
+              <button key={i} onClick={() => setVanskelighet(i+1)} style={{fontSize:13, padding:"6px 11px", borderRadius:8, cursor:"pointer", border:"1px solid #EDE3D4", background:vanskelighet===i+1?"#111111":"#fff", color:vanskelighet===i+1?"#fff":"#555", fontFamily:"inherit", fontWeight:vanskelighet===i+1?600:400}}>{v.label}</button>
             ))}
           </div>
         </div>
@@ -595,7 +724,8 @@ function App() {
                         if (h.innstillinger) {
                           const innst = h.innstillinger;
                           if (innst.visTid !== undefined) { setVisTid(innst.visTid); visTidRef.current = innst.visTid; }
-                          if (innst.antallAlternativ !== undefined) setAntallAlternativ(innst.antallAlternativ);
+                          if (innst.vanskelighet !== undefined) setVanskelighet(innst.vanskelighet);
+                          else if (innst.antallAlternativ !== undefined) setVanskelighet(innst.antallAlternativ <= 2 ? 1 : innst.antallAlternativ === 3 ? 2 : 3);
                           if (innst.tidsBegrensning !== undefined) setTidsBegrensning(innst.tidsBegrensning);
                           if (innst.lesehjelp !== undefined) setLesehjelp(innst.lesehjelp);
                           if (innst.forsinkelse !== undefined) setForsinkelse(innst.forsinkelse);
@@ -639,7 +769,7 @@ function App() {
           <span style={{fontSize:13, color: gjenværendeTid <= 2 ? "#c0392b" : "#888"}}>{gjenværendeTid} sek</span>
         </div>
         <p style={{fontSize:15, color:"#666", marginBottom:"1.25rem"}}>Hvilket ord ble vist?</p>
-        <div style={{display:"grid", gridTemplateColumns:antallAlternativ===3?"1fr 1fr 1fr":"1fr 1fr", gap:12, marginBottom:"1.5rem"}}>
+        <div style={{display:"grid", gridTemplateColumns:VANSKELIGHET[vanskelighet-1].alternativ===3?"1fr 1fr 1fr":"1fr 1fr", gap:12, marginBottom:"1.5rem"}}>
           {valg.map((v,i) => (
             <button key={i} onClick={() => velg(v)} style={s.valgBtn}>{v}</button>
           ))}

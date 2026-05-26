@@ -1,0 +1,50 @@
+{
+  "3": [
+    ["bin",4],["das",5],["der",5],["die",5],["ein",5],["eis",3],["gar",3],["gut",5],["hat",5],["ich",5],
+    ["ihr",4],["ist",5],["kam",4],["mag",4],["man",5],["mir",4],["mit",5],["nie",4],["nun",4],["nur",4],
+    ["sah",3],["tun",4],["vor",4],["war",5],["wer",4],["wie",5],["zum",4],["zur",4],["auf",5],["aus",5],
+    ["bei",4],["bis",4],["dem",4],["den",4],["wir",5],["von",5],["tag",4],["zug",3],["mut",3],["rad",3]
+  ],
+  "4": [
+    ["auch",5],["auto",4],["bald",4],["buch",4],["cool",4],["dach",3],["dein",4],["doch",4],["drei",4],["echt",4],
+    ["erst",3],["euch",4],["fach",3],["film",5],["ganz",4],["gern",4],["halt",3],["haus",5],["hoch",4],["jede",4],
+    ["kalt",3],["kein",4],["kind",5],["lang",4],["laut",4],["lieb",4],["lied",4],["mehr",4],["mild",3],["nach",4],
+    ["nett",4],["noch",4],["oben",3],["park",4],["rund",3],["sehr",5],["sein",4],["seit",4],["sich",5],["toll",4]
+  ],
+  "5": [
+    ["abend",4],["aktiv",4],["alles",5],["bitte",5],["blond",3],["bravo",4],["dabei",4],["danke",5],["dicht",3],["durch",4],
+    ["etwas",5],["frech",3],["gerne",4],["glück",4],["grüne",3],["hallo",5],["heute",5],["immer",5],["jeden",4],["jetzt",5],
+    ["keine",5],["kommt",4],["krass",4],["liebe",5],["macht",4],["musik",5],["nicht",5],["offen",4],["prima",4],["ruhig",4],
+    ["schön",5],["smart",4],["spiel",5],["sport",5],["stark",5],["super",5],["total",4],["trend",4],["unter",4],["wilde",3]
+  ],
+  "6": [
+    ["anfang",4],["besser",4],["brille",3],["daheim",3],["denken",4],["direkt",4],["doppel",3],["einzel",3],["eltern",4],["fahren",4],
+    ["falsch",4],["fertig",4],["freund",5],["gerade",4],["gleich",4],["gruppe",4],["jemand",4],["karten",3],["kaufen",4],["klasse",5],
+    ["kommen",4],["können",5],["lernen",5],["lustig",4],["meinen",3],["modern",4],["nerven",4],["normal",4],["nutzen",3],["rocken",3],
+    ["sachen",4],["schule",5],["sicher",4],["sprung",3],["streng",3],["tanzen",4],["urlaub",4],["warten",4],["werfen",3],["wochen",4]
+  ],
+  "7": [
+    ["abfahrt",3],["abstand",3],["anfänge",3],["ansehen",3],["antwort",4],["aufgabe",4],["ausgang",3],["ausland",3],["bekommt",3],["bringen",4],
+    ["brücken",3],["deutsch",5],["draußen",4],["einheit",3],["endlich",4],["erleben",4],["erwacht",3],["familie",5],["fußball",5],["gehören",4],
+    ["geister",3],["gemacht",4],["handeln",3],["konzert",4],["kreativ",4],["lächeln",4],["märchen",4],["nachher",3],["ordnung",4],["passend",3],
+    ["prüfung",4],["reichen",3],["schlimm",3],["stärker",4],["treffen",4],["treiben",3],["trinken",4],["tschüss",5],["turnier",4],["welcher",4]
+  ],
+  "8": [
+    ["ablaufen",3],["ankommen",4],["arbeiten",4],["benutzen",3],["bestimmt",4],["bezahlen",3],["erinnern",4],["erklären",4],["erlauben",3],["erlernen",3],
+    ["erstmals",3],["feiertag",4],["fotograf",3],["freiheit",5],["freizeit",5],["gelingen",3],["gerettet",3],["getränke",4],["gewinnen",4],["handball",4],
+    ["hoffnung",4],["kaufhaus",4],["klettert",3],["komplett",4],["konflikt",3],["manchmal",4],["nochmals",3],["rucksack",5],["schenken",4],["schlafen",4],
+    ["schlagen",3],["sprachen",3],["springen",4],["strecken",3],["training",5],["turniere",4],["verloren",4],["versuche",3],["vorhaben",3],["zusammen",4]
+  ],
+  "9": [
+    ["aufräumen",4],["aushalten",4],["bedeutend",4],["bekämpfen",3],["bewältigt",3],["einbilden",3],["eintragen",3],["erfahrung",4],["erinnerte",4],["erwachsen",4],
+    ["fähigkeit",4],["fernseher",4],["forschung",4],["fußballer",4],["gastgeber",3],["geheimnis",5],["gemeinsam",4],["gründlich",4],["irgendwie",4],["jahrestag",3],
+    ["jahrzehnt",3],["kämpferin",3],["kleinkind",3],["natürlich",5],["passieren",4],["pünktlich",4],["rücksicht",3],["schülerin",4],["spielfeld",4],["sportlich",4],
+    ["trainings",3],["überwacht",3],["unbedingt",4],["vertrauen",4],["vorschlag",4],["wanderung",3],["wichtigen",4],["ankündigt",3],["ansprache",4],["hochmütig",2]
+  ],
+  "10": [
+    ["abendessen",4],["abschalten",3],["aufräumung",3],["bundesliga",4],["chatgruppe",4],["dazwischen",3],["einstellen",4],["entspannen",4],["entwickelt",4],["festhalten",3],
+    ["fotobücher",3],["gefährlich",4],["geheimcode",4],["gesundheit",5],["gratuliere",3],["handyspiel",4],["hochsprung",3],["jugendclub",4],["jugendlich",4],["lernstunde",4],
+    ["mannschaft",5],["mitschüler",4],["nachmittag",4],["netzwerken",3],["öffentlich",4],["schnellste",3],["schülerbus",4],["schwimmbad",5],["skateboard",5],["sporthalle",4],
+    ["tagespläne",3],["taktikplan",3],["turnbeutel",4],["turnschuhe",5],["unterricht",5],["verbessern",4],["gemeinsame",3],["jugendraum",3],["mobilspiel",4],["sportplatz",4]
+  ]
+}

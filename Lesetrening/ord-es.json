@@ -1,0 +1,50 @@
+{
+  "3": [
+    ["así",3],["con",5],["dan",3],["del",5],["dos",4],["fui",4],["hay",5],["haz",3],["iba",3],["las",5],
+    ["los",5],["luz",4],["mal",4],["mar",4],["mes",3],["mil",4],["mis",4],["muy",5],["pan",4],["paz",3],
+    ["pie",3],["por",5],["que",5],["red",4],["río",3],["sal",3],["ser",5],["sol",4],["son",4],["sur",3],
+    ["ten",3],["tus",4],["una",5],["uno",4],["ven",4],["ver",4],["vez",4],["voy",4],["voz",3],["fue",4]
+  ],
+  "4": [
+    ["amor",5],["ayer",4],["azul",4],["boca",3],["buen",4],["café",5],["cama",4],["cara",4],["casa",5],["casi",4],
+    ["como",5],["cosa",4],["dato",3],["dice",4],["este",4],["fama",3],["fino",3],["gana",4],["hijo",4],["hora",4],
+    ["idea",4],["jugo",3],["lado",4],["lago",3],["luna",4],["mano",4],["mesa",4],["moto",3],["nada",5],["niño",4],
+    ["nota",3],["otro",4],["palo",3],["para",5],["pelo",3],["pero",5],["poco",4],["ropa",4],["sano",3],["solo",4]
+  ],
+  "5": [
+    ["abajo",4],["aguas",3],["ahora",5],["antes",5],["baile",4],["banco",4],["campo",4],["cielo",4],["chico",4],["clase",5],
+    ["claro",4],["coche",4],["color",4],["corto",3],["dicho",3],["dulce",4],["ellos",4],["estoy",4],["fácil",5],["feliz",5],
+    ["ganas",4],["genio",3],["igual",4],["joven",4],["jugar",5],["leche",4],["libre",4],["libro",5],["listo",4],["luego",4],
+    ["madre",5],["mundo",5],["nadie",4],["noche",5],["norte",3],["nuevo",4],["nunca",4],["padre",5],["playa",5],["punto",4]
+  ],
+  "6": [
+    ["abuela",4],["acción",4],["agosto",3],["alegre",4],["amigos",5],["arriba",4],["barrio",4],["bonita",4],["buscar",4],["cambio",4],
+    ["chicos",4],["ciudad",4],["correr",4],["corona",3],["cuarto",3],["cuenta",4],["cuerpo",4],["danzar",3],["dentro",4],["dibujo",4],
+    ["dinero",5],["dormir",4],["equipo",4],["espejo",3],["fiesta",5],["fresco",3],["futuro",4],["genial",5],["gritar",3],["grupos",4],
+    ["hablar",5],["idioma",3],["juegos",5],["juntos",4],["llevar",4],["locura",3],["madera",3],["martes",3],["medios",3],["mirada",3]
+  ],
+  "7": [
+    ["abrazar",4],["abuelos",3],["alguien",4],["amantes",3],["bonitos",3],["caminar",4],["canción",5],["captura",3],["cerebro",4],["clásico",4],
+    ["comprar",4],["control",4],["cuentos",4],["cultura",4],["debemos",3],["deporte",5],["derecho",4],["dibujar",4],["digital",4],["domingo",4],
+    ["encanto",4],["enojado",3],["entrada",4],["escolar",4],["escucha",4],["familia",5],["fiestas",4],["gracias",5],["grandes",4],["hermano",4],
+    ["idiomas",3],["jugando",4],["lección",4],["maestro",4],["mascota",4],["mensaje",4],["natural",4],["novedad",3],["nuestro",4],["palabra",5]
+  ],
+  "8": [
+    ["aburrido",4],["academia",3],["ambiente",4],["animados",3],["aventura",5],["bailando",4],["campista",3],["cantando",4],["carreras",4],["cerebros",3],
+    ["combinar",3],["controla",3],["cuaderno",5],["dedicado",4],["despedir",3],["destreza",3],["divertir",4],["escuchar",5],["especial",4],["estudiar",5],
+    ["favorita",4],["festival",4],["geniales",4],["gracioso",4],["historia",5],["hermanos",4],["humoroso",3],["imaginar",4],["internet",5],["juguetes",4],
+    ["mascotas",4],["mensajes",4],["merendar",4],["modernas",3],["noticias",4],["olvidado",3],["palabras",5],["pandilla",3],["partidos",4],["sorpresa",5]
+  ],
+  "9": [
+    ["abrazando",4],["abundante",3],["acelerado",3],["admirando",3],["agradable",4],["animación",4],["asistente",3],["atletismo",4],["aventuras",5],["brillante",4],
+    ["campeones",4],["canciones",5],["categoría",3],["chocolate",5],["coloridos",3],["compañero",5],["comprendo",3],["comunidad",4],["concierto",4],["creativos",4],
+    ["dedicados",3],["defendido",3],["deportivo",4],["descubrir",4],["disfrutar",5],["diversión",5],["encantado",4],["encontrar",4],["entrenado",4],["escritura",4],
+    ["excelente",5],["expresión",4],["favoritos",4],["festejado",3],["ganadoras",4],["graciosos",3],["increíble",5],["liderazgo",4],["madrileño",3],["meriendas",3]
+  ],
+  "10": [
+    ["acostumbra",3],["animalitos",3],["asombrosos",3],["baloncesto",5],["bienvenido",5],["campamento",4],["celebrando",4],["ciudadanos",3],["compañeros",5],["concentrar",4],
+    ["conciertos",4],["confidente",3],["cumpleaños",5],["deportista",4],["destinados",3],["divertidos",4],["documental",3],["dramáticos",3],["emocionado",4],["entrenando",4],
+    ["entrenador",4],["estaciones",4],["estudiante",5],["excelentes",4],["fantástico",5],["fascinante",4],["fotografía",4],["futbolista",4],["grandísimo",3],["increíbles",4],
+    ["merendando",3],["modernidad",3],["motivación",4],["naturaleza",4],["negociando",3],["organizado",3],["superhéroe",4],["televisión",4],["planetario",3],["colombiana",3]
+  ]
+}
