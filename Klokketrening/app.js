@@ -11,8 +11,8 @@ const NS = 'http://www.w3.org/2000/svg';
 const cfg = {
   mode:        'show-clock',
   exprStyle:   'text',
-  marks:       0,       // 0 | 4 | 12  – antall streker på skiven
-  showNums:    false,   // vis tall eller ikke
+  marks:       12,      // 0 | 4 | 12  – antall streker på skiven
+  showNums:    true,    // vis tall eller ikke
   showHint:    false,
   hourColor:   '#1a1a2e',
   minuteColor: '#e63946',
