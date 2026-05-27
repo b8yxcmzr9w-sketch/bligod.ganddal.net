@@ -38,6 +38,9 @@
   button { font-family: inherit; transition: background 0.15s, opacity 0.15s; }
   button:hover:not(:disabled) { background: #F5EDE0 !important; }
   button:active:not(:disabled) { transform: scale(0.98); }
+  .svar-knapp { outline: none !important; }
+  .svar-knapp:hover:not(:disabled) { background: #fff !important; border-color: #bba88a !important; }
+  .svar-knapp:focus, .svar-knapp:focus-visible { outline: none !important; background: #fff !important; }
   @keyframes bokstavLys {
     0%   { color: #111111; transform: scale(1); }
     50%  { color: #D4820A; transform: scale(1.15); }
@@ -763,7 +766,7 @@ function App() {
         <p style={{fontSize:15, color:"#666", marginBottom:"1.25rem"}}>Hvilket ord ble vist?</p>
         <div style={{display:"grid", gridTemplateColumns:VANSKELIGHET[vanskelighet-1].alternativ===3?"1fr 1fr 1fr":"1fr 1fr", gap:12, marginBottom:"1.5rem"}}>
           {valg.map((v,i) => (
-            <button key={i} onClick={() => velg(v)} style={s.valgBtn}>{v}</button>
+            <button key={i} className="svar-knapp" onClick={() => velg(v)} style={s.valgBtn}>{v}</button>
           ))}
         </div>
         <div style={{display:"flex", justifyContent:"center", gap:32, marginTop:"1rem", fontSize:13, color:"#666"}}>
